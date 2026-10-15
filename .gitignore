@@ -17,3 +17,6 @@ Thumbs.db
 
 # Aseprite backups
 *.ase.bak
+
+# Downloaded asset archives (extract what you need into assets/)
+*.zip
