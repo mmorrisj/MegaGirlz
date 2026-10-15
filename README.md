@@ -85,11 +85,14 @@ assets/
 scenes/
   characters/
   levels/
+  projectiles/
   vfx/
   ui/
 scripts/
   characters/
   components/     # reusable child-node components
+  levels/
+  projectiles/
   systems/        # input, swapping, camera, game state
 licenses/
 CREDITS.md
@@ -99,6 +102,10 @@ CREDITS.md
 
 1. Install Godot 4.7 or newer (stable, standard build, not .NET).
 2. Clone the repo and open `project.godot` in Godot.
-3. Press F5 to run. `scenes/main.tscn` is the entry scene.
+3. Press F5 to run. The entry scene is `scenes/levels/test_room.tscn`.
+
+Prototype controls (player 1, keyboard): move **A/D** or **arrows**, jump **Space/K/Z** (hold for a higher jump), shoot **J/X**.
+
+Movement feel is tuned through `@export` values on the `Sister` node (Inspector panel): run speed, jump height, time to apex, coyote time, jump buffer, max shots.
 
 `project.godot` already sets the pixel-art defaults: 480×270 viewport, `viewport` stretch mode with integer scaling, nearest-neighbor texture filtering, 2D pixel snapping, and HDR 2D on the Forward+ renderer. Change them only in Project Settings, not by hand-editing the file.
