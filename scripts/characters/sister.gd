@@ -23,6 +23,9 @@ enum AttackKind { GROUND, AIR }
 ## Lightest hair shade; darker shades are derived from it. The boots share
 ## the hair colors in the base sprite.
 @export var hair_color: Color = Color(1.0, 0.663, 0.224)
+## Optional art drawn over the shared sprite to give this sister her own look
+## (e.g. Evie's bangs). Must mirror the base sprite's animations and frames.
+@export var hairstyle_frames: SpriteFrames
 
 @export_group("Run")
 @export var run_speed: float = 140.0
@@ -76,12 +79,16 @@ var _attack_time: float = -1.0
 @onready var _sword_hitbox: Area2D = $SquashPivot/Visual/SwordHitbox
 @onready var _air_slash_hitbox: Area2D = $SquashPivot/Visual/AirSlashHitbox
 @onready var _slash_arc: SlashArc = $SquashPivot/Visual/SlashArc
+@onready var _hairstyle: SpriteOverlay = $SquashPivot/Visual/Hairstyle
 
 
 func _ready() -> void:
 	_apply_palette()
 	_swap_beam.set_color(signature_color)
 	_slash_arc.set_color(signature_color)
+	_hairstyle.sprite_frames = hairstyle_frames
+	_hairstyle.visible = hairstyle_frames != null
+	_hairstyle.sync()
 
 
 func _physics_process(delta: float) -> void:

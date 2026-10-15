@@ -10,6 +10,7 @@
 [ext_resource type="Script" path="res://scripts/systems/party.gd" id="8_nlvay"]
 [ext_resource type="Script" path="res://scripts/systems/shake_camera.gd" id="9_v0nw6"]
 [ext_resource type="Script" path="res://scripts/systems/camera_follow.gd" id="10_cpk7y"]
+[ext_resource type="SpriteFrames" path="res://assets/characters/evie/evie_bangs_frames.tres" id="20_bangs"]
 
 [node name="MagicCliffs" type="Node2D" unique_id=1520894589 node_paths=PackedStringArray("party", "spawn_point")]
 script = ExtResource("1_88ina")
@@ -73,11 +74,12 @@ hair_color = Color(1, 0.8, 0.35, 1)
 position = Vector2(45, 140)
 signature_color = Color(1, 0.3, 0.8, 1)
 hair_color = Color(0.6, 0.38, 0.2, 1)
+hairstyle_frames = ExtResource("20_bangs")
 
 [node name="Lucy" parent="." unique_id=557405691 instance=ExtResource("7_udx6v")]
 position = Vector2(45, 140)
 signature_color = Color(1, 0.64, 0, 1)
-hair_color = Color(0.68, 0.42, 0.9, 1)
+hair_color = Color(0.8, 0.58, 0.36, 1)
 
 [node name="Party" type="Node" parent="." unique_id=556762509 node_paths=PackedStringArray("members")]
 script = ExtResource("8_nlvay")

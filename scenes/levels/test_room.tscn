@@ -5,6 +5,7 @@
 [ext_resource type="Texture2D" path="res://assets/backgrounds/bay_area/background.png" id="3_knmjg"]
 [ext_resource type="TileSet" path="res://assets/tiles/bay_area/bay_area_tileset.tres" id="4_asmw1"]
 [ext_resource type="Script" path="res://scripts/systems/party.gd" id="5_knmjg"]
+[ext_resource type="SpriteFrames" path="res://assets/characters/evie/evie_bangs_frames.tres" id="20_bangs"]
 
 [node name="TestRoom" type="Node2D" unique_id=1247231533]
 
@@ -40,11 +41,12 @@ hair_color = Color(1, 0.8, 0.35, 1)
 position = Vector2(80, 220)
 signature_color = Color(1, 0.3, 0.8, 1)
 hair_color = Color(0.6, 0.38, 0.2, 1)
+hairstyle_frames = ExtResource("20_bangs")
 
 [node name="Lucy" parent="." unique_id=500803158 instance=ExtResource("2_sister")]
 position = Vector2(80, 220)
 signature_color = Color(1, 0.64, 0, 1)
-hair_color = Color(0.68, 0.42, 0.9, 1)
+hair_color = Color(0.8, 0.58, 0.36, 1)
 
 [node name="Party" type="Node" parent="." unique_id=137656589 node_paths=PackedStringArray("members")]
 script = ExtResource("5_knmjg")
