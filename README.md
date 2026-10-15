@@ -45,12 +45,12 @@ Abilities are not designed yet. They will be tuned to fit each sister's personal
 
 ### Milestone 1: Vertical slice
 1. One sister running, jumping, and shooting in a test room, with keyboard input and placeholder CC0 art.
-2. Game feel pass on the basics: hit flash, screen shake, muzzle flash, jump squash and stretch.
+2. Game feel pass on the basics: screen shake, muzzle flash, shot impact sparks, jump and land squash and stretch.
 3. Controller input and a second player, with per-device input mapping.
 4. Third player plus character swapping.
 5. Fixed-screen camera with room transitions and a catch-up rule for players left behind.
 6. Visual pass: HDR glow, one dynamic light, parallax background.
-7. One enemy type and each sister's signature ability.
+7. One enemy type (with hit flash and hit-stop) and each sister's signature ability.
 
 ### Later
 - Health, damage, and a respawn/assist mechanic
