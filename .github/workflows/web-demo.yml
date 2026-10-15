@@ -1,0 +1,79 @@
+name: Web demo
+
+# Builds the game for the browser and runs the tests on every push and PR.
+# Pushes to main also publish the build to GitHub Pages.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: web-demo-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  GODOT_VERSION: 4.7.2
+  GODOT: ~/godot/Godot_v4.7.2-stable_linux.x86_64
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cache Godot and web export templates
+        id: cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/godot
+            ~/.local/share/godot/export_templates
+          key: godot-${{ env.GODOT_VERSION }}-web
+
+      - name: Download Godot and web export templates
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: |
+          base="https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}-stable"
+          templates=~/.local/share/godot/export_templates/${GODOT_VERSION}.stable
+          mkdir -p ~/godot "$templates"
+          curl -fsSL -o /tmp/godot.zip "$base/Godot_v${GODOT_VERSION}-stable_linux.x86_64.zip"
+          unzip -q /tmp/godot.zip -d ~/godot
+          curl -fsSL -o /tmp/templates.tpz "$base/Godot_v${GODOT_VERSION}-stable_export_templates.tpz"
+          # Only the web templates are needed; the full archive is ~1 GB.
+          unzip -q -j /tmp/templates.tpz 'templates/web*' 'templates/version.txt' -d "$templates"
+          ls "$templates"
+
+      - name: Import project
+        run: ${{ env.GODOT }} --headless --import --path .
+
+      - name: Run tests
+        run: ${{ env.GODOT }} --headless --path . -s res://tests/run_tests.gd
+
+      - name: Export web build
+        run: |
+          mkdir -p build/web
+          ${{ env.GODOT }} --headless --path . --export-release "Web" build/web/index.html
+          test -f build/web/index.pck
+          ls -la build/web
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: build/web
+
+  deploy:
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
