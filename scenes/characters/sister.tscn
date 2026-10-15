@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3]
+[gd_scene load_steps=13 format=3]
 
 [ext_resource type="Script" path="res://scripts/characters/sister.gd" id="1_sister"]
 [ext_resource type="Script" path="res://scripts/components/squash_stretch.gd" id="2_squash"]
@@ -6,6 +6,7 @@
 [ext_resource type="SpriteFrames" path="res://assets/characters/sister_base/sister_frames.tres" id="5_frames"]
 [ext_resource type="Shader" path="res://assets/vfx/palette_swap.gdshader" id="6_palette"]
 [ext_resource type="Script" path="res://scripts/components/swap_beam.gd" id="7_beam"]
+[ext_resource type="Script" path="res://scripts/components/slash_arc.gd" id="8_arc"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_palette"]
 resource_local_to_scene = true
@@ -16,6 +17,9 @@ size = Vector2(12, 40)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_sword"]
 size = Vector2(46, 36)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_air_slash"]
+size = Vector2(46, 52)
 
 [node name="Sister" type="CharacterBody2D"]
 collision_layer = 2
@@ -46,6 +50,19 @@ monitoring = false
 position = Vector2(26, -8)
 shape = SubResource("RectangleShape2D_sword")
 
+[node name="AirSlashHitbox" type="Area2D" parent="SquashPivot/Visual"]
+collision_layer = 8
+collision_mask = 4
+monitoring = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="SquashPivot/Visual/AirSlashHitbox"]
+position = Vector2(9, -16)
+shape = SubResource("RectangleShape2D_air_slash")
+
+[node name="SlashArc" type="Node2D" parent="SquashPivot/Visual"]
+position = Vector2(2, -10)
+script = ExtResource("8_arc")
+
 [node name="SwapBeam" type="Node2D" parent="SquashPivot/Visual" node_paths=PackedStringArray("sprite", "beam")]
 script = ExtResource("7_beam")
 sprite = NodePath("../Sprite")
@@ -70,4 +87,6 @@ sprite = NodePath("../SquashPivot/Visual/Sprite")
 [connection signal="jumped" from="." to="SquashStretch" method="play_jump"]
 [connection signal="landed" from="." to="SquashStretch" method="play_land"]
 [connection signal="attacked" from="." to="Animator" method="play_attack"]
+[connection signal="air_attacked" from="." to="Animator" method="play_air_attack"]
+[connection signal="air_attacked" from="." to="SquashPivot/Visual/SlashArc" method="play"]
 [connection signal="swapped_in" from="." to="SquashPivot/Visual/SwapBeam" method="play"]

@@ -7,6 +7,22 @@
 [ext_resource type="Texture2D" path="res://assets/characters/sister_base/jump.png" id="5_xcvjx"]
 [ext_resource type="Texture2D" path="res://assets/characters/sister_base/run.png" id="6_adv16"]
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_i1wnq"]
+atlas = ExtResource("1_i1wnq")
+region = Rect2(896, 0, 128, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2j2uq"]
+atlas = ExtResource("1_i1wnq")
+region = Rect2(384, 0, 128, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_apkm0"]
+atlas = ExtResource("1_i1wnq")
+region = Rect2(384, 0, 128, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_x71ey"]
+atlas = ExtResource("1_i1wnq")
+region = Rect2(384, 0, 128, 96)
+
 [sub_resource type="AtlasTexture" id="AtlasTexture_4yvdh"]
 atlas = ExtResource("1_i1wnq")
 region = Rect2(0, 0, 128, 96)
@@ -113,6 +129,23 @@ region = Rect2(896, 0, 128, 96)
 
 [resource]
 animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_i1wnq")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2j2uq")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_apkm0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_x71ey")
+}],
+"loop": 0,
+"name": &"air_slash",
+"speed": 12.0
+}, {
 "frames": [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_4yvdh")

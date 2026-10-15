@@ -105,7 +105,7 @@ CREDITS.md
 2. Clone the repo and open `project.godot` in Godot.
 3. Press F5 to run. The entry scene is `scenes/levels/magic_cliffs.tscn`, a horizontal scrolling stage with parallax layers. `scenes/levels/test_room.tscn` is a single-screen room for testing mechanics (open it and press F6).
 
-Prototype controls (keyboard): move **A/D** or **arrows**, jump **Space/K/Z** (hold for a higher jump), sword slash **J/X**, swap sister **E/O** (next) and **Q/U** (previous). Controller bindings: A jump, X slash, RB/LB swap.
+Prototype controls (keyboard): move **A/D** or **arrows**, jump **Space/K/Z** (hold for a higher jump), sword slash **J/X** (in the air: overhead slash), swap sister **E/O** (next) and **Q/U** (previous). Controller bindings: A jump, X slash, RB/LB swap.
 
 Movement feel is tuned through `@export` values on the `Sister` node (Inspector panel): run speed, jump height, time to apex, coyote time, jump buffer, max shots.
 

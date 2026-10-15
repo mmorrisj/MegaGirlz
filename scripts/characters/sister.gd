@@ -9,10 +9,14 @@ extends CharacterBody2D
 signal jumped
 ## fall_speed is the downward speed just before touching the ground.
 signal landed(fall_speed: float)
-## Emitted when a sword slash starts.
+## Emitted when a ground sword slash starts.
 signal attacked
+## Emitted when an overhead slash starts in the air.
+signal air_attacked
 ## Emitted when this sister takes over from another during a swap.
 signal swapped_in
+
+enum AttackKind { GROUND, AIR }
 
 ## Identifies this sister: her outfit, sword slash, and swap beam use it.
 @export var signature_color: Color = Color.CYAN
@@ -45,6 +49,12 @@ signal swapped_in
 @export var attack_active_start: float = 0.3
 @export var attack_active_end: float = 0.55
 
+@export_group("Air attack")
+## Overhead slash used when attacking in the air. Landing cuts it short.
+@export var air_attack_duration: float = 0.32
+@export var air_attack_active_start: float = 0.08
+@export var air_attack_active_end: float = 0.24
+
 ## The player controlling this sister. Null means no one (she stands still).
 var input: PlayerInput = null
 ## 1 = facing right, -1 = facing left.
@@ -53,6 +63,9 @@ var facing: int = 1
 var _coyote_timer: float = 0.0
 var _jump_buffer_timer: float = 0.0
 var _is_rising_from_jump: bool = false
+## Which slash is playing; only meaningful while is_attacking().
+var attack_kind: AttackKind = AttackKind.GROUND
+
 ## Seconds since the current slash started, or -1 when not attacking.
 var _attack_time: float = -1.0
 
@@ -61,11 +74,14 @@ var _attack_time: float = -1.0
 @onready var _collision: CollisionShape2D = $CollisionShape2D
 @onready var _swap_beam: SwapBeam = $SquashPivot/Visual/SwapBeam
 @onready var _sword_hitbox: Area2D = $SquashPivot/Visual/SwordHitbox
+@onready var _air_slash_hitbox: Area2D = $SquashPivot/Visual/AirSlashHitbox
+@onready var _slash_arc: SlashArc = $SquashPivot/Visual/SlashArc
 
 
 func _ready() -> void:
 	_apply_palette()
 	_swap_beam.set_color(signature_color)
+	_slash_arc.set_color(signature_color)
 
 
 func _physics_process(delta: float) -> void:
@@ -177,21 +193,38 @@ func _handle_jump() -> void:
 
 
 func _handle_attack() -> void:
-	if input.is_attack_just_pressed() and not is_attacking():
-		_attack_time = 0.0
+	if not input.is_attack_just_pressed() or is_attacking():
+		return
+	_attack_time = 0.0
+	if is_on_floor():
+		attack_kind = AttackKind.GROUND
 		attacked.emit()
+	else:
+		attack_kind = AttackKind.AIR
+		air_attacked.emit()
 
 
 func _update_attack(delta: float) -> void:
 	if not is_attacking():
 		return
-	_attack_time += delta
-	if _attack_time >= attack_duration:
+	if attack_kind == AttackKind.AIR and is_on_floor():
 		_end_attack()
 		return
-	_sword_hitbox.monitoring = _attack_time >= attack_active_start and _attack_time < attack_active_end
+	_attack_time += delta
+	var air: bool = attack_kind == AttackKind.AIR
+	var duration: float = air_attack_duration if air else attack_duration
+	if _attack_time >= duration:
+		_end_attack()
+		return
+	var active_start: float = air_attack_active_start if air else attack_active_start
+	var active_end: float = air_attack_active_end if air else attack_active_end
+	var hitbox: Area2D = _air_slash_hitbox if air else _sword_hitbox
+	hitbox.monitoring = _attack_time >= active_start and _attack_time < active_end
 
 
 func _end_attack() -> void:
+	if attack_kind == AttackKind.AIR and is_attacking():
+		_slash_arc.stop()
 	_attack_time = -1.0
 	_sword_hitbox.monitoring = false
+	_air_slash_hitbox.monitoring = false
