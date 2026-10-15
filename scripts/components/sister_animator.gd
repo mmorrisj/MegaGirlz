@@ -2,9 +2,10 @@ class_name SisterAnimator
 extends Node
 ## Picks the sister's animation from how she is moving.
 ##
-## A sword slash (ground or air) plays to the end over any movement
-## animation. Runs after the sister in each physics frame (children process
-## after their parent), so it always sees her latest velocity and floor state.
+## An attack (ground slash, air slash, or throw) plays to the end over any
+## movement animation. Runs after the sister in each physics frame (children
+## process after their parent), so it always sees her latest velocity and
+## floor state.
 
 @export var body: Sister
 @export var sprite: AnimatedSprite2D
@@ -16,6 +17,10 @@ func play_attack() -> void:
 
 func play_air_attack() -> void:
 	_restart(&"air_slash")
+
+
+func play_throw() -> void:
+	_restart(&"throw")
 
 
 func _restart(animation: StringName) -> void:

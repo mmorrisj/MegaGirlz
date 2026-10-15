@@ -1,6 +1,6 @@
 class_name Sister
 extends CharacterBody2D
-## A playable sister: run, jump, and slash with her sword.
+## A playable sister: run, jump, and fight with her weapon (sword or shuriken).
 ##
 ## Shared by Gigi, Evie, and Lucy. Each sister's signature ability will be a
 ## separate child component, not a subclass. Game-feel effects listen to
@@ -13,10 +13,13 @@ signal landed(fall_speed: float)
 signal attacked
 ## Emitted when an overhead slash starts in the air.
 signal air_attacked
+## Emitted when a shuriken is thrown.
+signal threw
 ## Emitted when this sister takes over from another during a swap.
 signal swapped_in
 
-enum AttackKind { GROUND, AIR }
+enum Weapon { SWORD, SHURIKEN }
+enum AttackKind { GROUND, AIR, THROW }
 
 ## Identifies this sister: her outfit, sword slash, and swap beam use it.
 @export var signature_color: Color = Color.CYAN
@@ -26,6 +29,9 @@ enum AttackKind { GROUND, AIR }
 ## Optional art drawn over the shared sprite to give this sister her own look
 ## (e.g. Evie's bangs). Must mirror the base sprite's animations and frames.
 @export var hairstyle_frames: SpriteFrames
+## Sword: ground slash and overhead air slash. Shuriken: thrown stars, on the
+## ground or in the air.
+@export var weapon: Weapon = Weapon.SWORD
 
 @export_group("Run")
 @export var run_speed: float = 140.0
@@ -58,6 +64,10 @@ enum AttackKind { GROUND, AIR }
 @export var air_attack_active_start: float = 0.08
 @export var air_attack_active_end: float = 0.24
 
+@export_group("Throw")
+## How long the throwing pose holds before she can throw again.
+@export var throw_duration: float = 0.2
+
 ## The player controlling this sister. Null means no one (she stands still).
 var input: PlayerInput = null
 ## 1 = facing right, -1 = facing left.
@@ -80,6 +90,7 @@ var _attack_time: float = -1.0
 @onready var _air_slash_hitbox: Area2D = $SquashPivot/Visual/AirSlashHitbox
 @onready var _slash_arc: SlashArc = $SquashPivot/Visual/SlashArc
 @onready var _hairstyle: SpriteOverlay = $SquashPivot/Visual/Hairstyle
+@onready var _thrower: ShurikenThrower = $SquashPivot/Visual/ShurikenThrower
 
 
 func _ready() -> void:
@@ -202,6 +213,14 @@ func _handle_jump() -> void:
 func _handle_attack() -> void:
 	if not input.is_attack_just_pressed() or is_attacking():
 		return
+	if weapon == Weapon.SHURIKEN:
+		if not _thrower.can_throw():
+			return
+		_attack_time = 0.0
+		attack_kind = AttackKind.THROW
+		_thrower.throw(facing)
+		threw.emit()
+		return
 	_attack_time = 0.0
 	if is_on_floor():
 		attack_kind = AttackKind.GROUND
@@ -218,14 +237,21 @@ func _update_attack(delta: float) -> void:
 		_end_attack()
 		return
 	_attack_time += delta
-	var air: bool = attack_kind == AttackKind.AIR
-	var duration: float = air_attack_duration if air else attack_duration
+	match attack_kind:
+		AttackKind.GROUND:
+			_update_slash(attack_duration, attack_active_start, attack_active_end, _sword_hitbox)
+		AttackKind.AIR:
+			_update_slash(air_attack_duration, air_attack_active_start, air_attack_active_end, _air_slash_hitbox)
+		AttackKind.THROW:
+			if _attack_time >= throw_duration:
+				_end_attack()
+
+
+## Ends the slash after `duration`; the hitbox is live between the two times.
+func _update_slash(duration: float, active_start: float, active_end: float, hitbox: Area2D) -> void:
 	if _attack_time >= duration:
 		_end_attack()
 		return
-	var active_start: float = air_attack_active_start if air else attack_active_start
-	var active_end: float = air_attack_active_end if air else attack_active_end
-	var hitbox: Area2D = _air_slash_hitbox if air else _sword_hitbox
 	hitbox.monitoring = _attack_time >= active_start and _attack_time < active_end
 
 

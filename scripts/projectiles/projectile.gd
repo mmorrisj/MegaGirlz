@@ -1,7 +1,7 @@
-class_name BusterShot
+class_name Projectile
 extends Area2D
-## Basic arm-cannon shot. Flies straight and disappears on hitting the world
-## or leaving the screen.
+## Straight-flying projectile (arm-cannon shot, shuriken). Disappears on
+## hitting the world or leaving the screen.
 
 const IMPACT_SPARK_SCENE: PackedScene = preload("res://scenes/vfx/impact_spark.tscn")
 

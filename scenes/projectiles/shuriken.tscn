@@ -1,0 +1,47 @@
+[gd_scene load_steps=7 format=3]
+
+[ext_resource type="Script" path="res://scripts/projectiles/projectile.gd" id="1_projectile"]
+[ext_resource type="Texture2D" path="res://assets/projectiles/shuriken.png" id="2_star"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_spin_a"]
+atlas = ExtResource("2_star")
+region = Rect2(0, 0, 16, 15)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_spin_b"]
+atlas = ExtResource("2_star")
+region = Rect2(16, 0, 16, 15)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_spin"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_spin_a")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_spin_b")
+}],
+"loop": true,
+"name": &"spin",
+"speed": 16.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_star"]
+size = Vector2(10, 10)
+
+[node name="Shuriken" type="Area2D"]
+collision_layer = 8
+collision_mask = 1
+script = ExtResource("1_projectile")
+speed = 300.0
+impact_shake = 0.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_star")
+
+[node name="Sprite" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_spin")
+animation = &"spin"
+autoplay = "spin"
+
+[node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="."]
+rect = Rect2(-8, -8, 16, 16)

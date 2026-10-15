@@ -75,6 +75,7 @@ position = Vector2(45, 140)
 signature_color = Color(1, 0.3, 0.8, 1)
 hair_color = Color(0.6, 0.38, 0.2, 1)
 hairstyle_frames = ExtResource("20_bangs")
+weapon = 1
 
 [node name="Lucy" parent="." unique_id=557405691 instance=ExtResource("7_udx6v")]
 position = Vector2(45, 140)

@@ -34,7 +34,7 @@ func test_impact_sparks_and_shake(ctx: TestContext) -> void:
 	await ctx.physics_frames(30)
 	# The arm-cannon shot is kept for a future ranged ability; fire one directly
 	# at the crates on the right.
-	var shot: BusterShot = load("res://scenes/projectiles/buster_shot.tscn").instantiate()
+	var shot: Projectile = load("res://scenes/projectiles/buster_shot.tscn").instantiate()
 	room.add_child(shot)
 	shot.global_position = Vector2(300, 224)
 	var saw_spark: bool = false

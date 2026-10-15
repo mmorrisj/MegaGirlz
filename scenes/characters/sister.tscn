@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3]
+[gd_scene load_steps=15 format=3]
 
 [ext_resource type="Script" path="res://scripts/characters/sister.gd" id="1_sister"]
 [ext_resource type="Script" path="res://scripts/components/squash_stretch.gd" id="2_squash"]
@@ -8,6 +8,7 @@
 [ext_resource type="Script" path="res://scripts/components/swap_beam.gd" id="7_beam"]
 [ext_resource type="Script" path="res://scripts/components/slash_arc.gd" id="8_arc"]
 [ext_resource type="Script" path="res://scripts/components/sprite_overlay.gd" id="9_overlay"]
+[ext_resource type="Script" path="res://scripts/components/shuriken_thrower.gd" id="10_thrower"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_palette"]
 resource_local_to_scene = true
@@ -70,6 +71,11 @@ shape = SubResource("RectangleShape2D_air_slash")
 position = Vector2(2, -10)
 script = ExtResource("8_arc")
 
+[node name="ShurikenThrower" type="Node2D" parent="SquashPivot/Visual" node_paths=PackedStringArray("body")]
+position = Vector2(14, -4)
+script = ExtResource("10_thrower")
+body = NodePath("../../..")
+
 [node name="SwapBeam" type="Node2D" parent="SquashPivot/Visual" node_paths=PackedStringArray("sprite", "beam")]
 script = ExtResource("7_beam")
 sprite = NodePath("../Sprite")
@@ -96,4 +102,5 @@ sprite = NodePath("../SquashPivot/Visual/Sprite")
 [connection signal="attacked" from="." to="Animator" method="play_attack"]
 [connection signal="air_attacked" from="." to="Animator" method="play_air_attack"]
 [connection signal="air_attacked" from="." to="SquashPivot/Visual/SlashArc" method="play"]
+[connection signal="threw" from="." to="Animator" method="play_throw"]
 [connection signal="swapped_in" from="." to="SquashPivot/Visual/SwapBeam" method="play"]
