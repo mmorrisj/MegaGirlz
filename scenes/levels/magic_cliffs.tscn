@@ -1,0 +1,94 @@
+[gd_scene format=4]
+
+[ext_resource type="Script" path="res://scripts/levels/magic_cliffs.gd" id="1_88ina"]
+[ext_resource type="Texture2D" path="res://assets/backgrounds/magic_cliffs/sky.png" id="1_scuci"]
+[ext_resource type="Texture2D" path="res://assets/backgrounds/magic_cliffs/clouds.png" id="2_m4ocd"]
+[ext_resource type="Texture2D" path="res://assets/backgrounds/magic_cliffs/sea.png" id="3_jhcig"]
+[ext_resource type="Texture2D" path="res://assets/backgrounds/magic_cliffs/far_grounds.png" id="4_fwklx"]
+[ext_resource type="TileSet" path="res://assets/tiles/magic_cliffs/magic_cliffs_tileset.tres" id="5_e4ey3"]
+[ext_resource type="PackedScene" path="res://scenes/characters/sister.tscn" id="7_udx6v"]
+[ext_resource type="Script" path="res://scripts/systems/party.gd" id="8_nlvay"]
+[ext_resource type="Script" path="res://scripts/systems/shake_camera.gd" id="9_v0nw6"]
+[ext_resource type="Script" path="res://scripts/systems/camera_follow.gd" id="10_cpk7y"]
+
+[node name="MagicCliffs" type="Node2D" unique_id=1520894589 node_paths=PackedStringArray("party", "spawn_point")]
+script = ExtResource("1_88ina")
+party = NodePath("Party")
+spawn_point = NodePath("SpawnPoint")
+
+[node name="Background" type="Node2D" parent="." unique_id=877325699]
+
+[node name="Sky" type="Parallax2D" parent="Background" unique_id=1844041899]
+scroll_scale = Vector2(0.1, 1)
+repeat_size = Vector2(112, 0)
+repeat_times = 7
+
+[node name="Texture" type="Sprite2D" parent="Background/Sky" unique_id=1352859443]
+position = Vector2(0, -30)
+texture = ExtResource("1_scuci")
+centered = false
+
+[node name="Clouds" type="Parallax2D" parent="Background" unique_id=491347386]
+scroll_scale = Vector2(0.3, 1)
+repeat_size = Vector2(544, 0)
+repeat_times = 3
+
+[node name="Texture" type="Sprite2D" parent="Background/Clouds" unique_id=772188583]
+texture = ExtResource("2_m4ocd")
+centered = false
+
+[node name="Sea" type="Parallax2D" parent="Background" unique_id=1884762274]
+scroll_scale = Vector2(0.4, 1)
+repeat_size = Vector2(112, 0)
+repeat_times = 7
+
+[node name="Texture" type="Sprite2D" parent="Background/Sea" unique_id=605393662]
+position = Vector2(0, 144)
+texture = ExtResource("3_jhcig")
+centered = false
+
+[node name="FarGrounds" type="Parallax2D" parent="Background" unique_id=1889319214]
+scroll_scale = Vector2(0.6, 1)
+repeat_size = Vector2(616, 0)
+repeat_times = 3
+
+[node name="Texture" type="Sprite2D" parent="Background/FarGrounds" unique_id=805788203]
+position = Vector2(0, 131)
+texture = ExtResource("4_fwklx")
+centered = false
+
+[node name="Level" type="TileMapLayer" parent="." unique_id=1904120078]
+tile_map_data = PackedByteArray("AAANAAoAAAAFAAsAAAAQAAoAAAAFAAsAAAATAAoAAAAMAAsAAAAVAAoAAAAQAAsAAAAYAAoAAAAgAAsAAAAYAA0AAAAgAA4AAAAKAAoAAAAMAAsAAAAHAAoAAAAMAAsAAAAEAAoAAAAQAAsAAAACAAoAAAAMAAsAAAABAAwAAAAFABAAAAAEAAwAAAAFABAAAAAHAAwAAAAFABAAAAAKAAwAAAAFABAAAAANAAwAAAAFABAAAAAQAAwAAAAFABAAAAAVAAwAAAAFABAAAAASAAwAAAAFABAAAAAVAA4AAAAFABAAAAASAA4AAAAFABAAAAAPAA4AAAAFABAAAAAMAA4AAAAFABAAAAAJAA4AAAAFABAAAAAGAA4AAAAFABAAAAADAA4AAAAFABAAAAAAAA4AAAAFABAAAAAdAAkAAAAUAA4AAAAfAAgAAAAUAA4AAAAhAAgAAAAXAA4AAAAjAAgAAAAXAA4AAAAlAAgAAAAaAA4AAAAnAAkAAAAXAA4AAAApAAkAAAAdAA8AAAArAAgAAAAUAA4AAAAtAAgAAAAXAA4AAAAvAAcAAAAYAAsAAAAxAAcAAAAbAAoAAAAzAAgAAAAaAA4AAAAdAAsAAAACAA4AAAA0AAsAAAAgAA4AAAA0AA4AAAAgAA4AAAATAA4AAAAMAA8AAAAhAAoAAAAJAA8AAAAkAAoAAAAPAA8AAAAwAAkAAAAPAA8AAAAFAA0AAAAPAA8AAAAPAA0AAAAPAA8AAAAfAAsAAAAMAA8AAAArAAoAAAAMAA8AAAAxAAwAAAAMAA8AAAAJAAYAAAALAAIAAAAuAAQAAAALAAIAAAASAAYAAAALAAIAAAAaAAcAAAAhAAMAAAA4AAwAAAAhAAMAAAA5AAkAAAAlAAMAAAA+AAwAAAAlAAMAAABIAAcAAAAkAAsAAABKAAcAAAAoAAsAAABLAAcAAAAoAAsAAABNAAcAAAAoAAsAAABPAAcAAAAoAAsAAABRAAcAAAAoAAsAAABUAAcAAAArAAsAAABFAAYAAAAbAAIAAABUAAYAAAAUAAIAAABBAAYAAAAUAAIAAABYAAYAAAAbAAIAAABWAAMAAAALAAIAAABdAA0AAAAyABAAAABeAAoAAAAuAAkAAABfAAIAAAAvAAMAAABgAAQAAAAvAAMAAABhAAYAAAAwAAYAAABgAAgAAAAuAAkAAABgAA0AAAArAAMAAABkAAcAAAArAAMAAABjAAEAAAAsAAcAAABrAAgAAAAsAAcAAABoAAwAAAAsAAcAAABpAAQAAAAsAAcAAABfAAAAAAAwAAYAAABsAAcAAAAyAAkAAABsAAYAAAAyAAkAAABsAAUAAAAyAAkAAABsAAQAAAAyAAkAAABsAAMAAAAyAAkAAABsAAIAAAAyAAkAAABsAAEAAAAyAAkAAABsAAAAAAAyAAkAAABhAAAAAAAyAAkAAABiAAAAAAAyAAkAAABjAAAAAAAyAAkAAABkAAAAAAAyAAkAAABlAAAAAAAyAAkAAABmAAAAAAAyAAkAAABnAAAAAAAyAAkAAABoAAAAAAAyAAkAAABpAAAAAAAyAAkAAABqAAAAAAAyAAkAAABrAAAAAAAyAAkAAABsAAoAAAAyAAkAAABsAAsAAAAyAAkAAABsAAwAAAAyAAkAAABsAA0AAAAyAAkAAABsAA4AAAAyAAkAAABrAA4AAAAyAAkAAABqAA4AAAAyAAkAAABpAA4AAAAyAAkAAABoAA4AAAAyAAkAAABnAA4AAAAyAAkAAABmAA4AAAAyAAkAAABlAA4AAAAyAAkAAABkAA4AAAAyAAkAAABjAA4AAAAyAAkAAABiAA4AAAAyAAkAAABiAA0AAAAyAAkAAABiAAwAAAAyAAkAAABiAAsAAAAyAAkAAABhAAsAAAAyAAkAAABgAAsAAAAyAAkAAABgAAoAAAAyAAkAAABhAAoAAAAyAAkAAABiAAoAAAAyAAkAAABiAAkAAAAyAAkAAABiAAgAAAAyAAkAAABhAAEAAAAyAAkAAABhAAIAAAAyAAkAAABhAAMAAAAyAAkAAABiAAMAAAAyAAkAAABiAAIAAAAyAAkAAABiAAEAAAAyAAkAAABiAAQAAAAyAAkAAABiAAUAAAAyAAkAAABjAAUAAAAyAAkAAABkAAUAAAAyAAkAAABlAAUAAAAyAAkAAABmAAUAAAAyAAkAAABmAAYAAAAyAAkAAABmAAcAAAAyAAkAAABmAAgAAAAyAAkAAABmAAkAAAAyAAkAAABlAAkAAAAyAAkAAABkAAkAAAAyAAkAAABjAAkAAAAyAAkAAABmAAwAAAAyAAkAAABmAAsAAAAyAAkAAABmAAoAAAAyAAkAAABlAAoAAAAyAAkAAABkAAoAAAAyAAkAAABjAAoAAAAyAAkAAABjAAsAAAAyAAkAAABjAAwAAAAyAAkAAABjAA0AAAAyAAkAAABkAA0AAAAyAAkAAABkAAwAAAAyAAkAAABkAAsAAAAyAAkAAABlAAsAAAAyAAkAAABlAAwAAAAyAAkAAABlAA0AAAAyAAkAAABmAA0AAAAyAAkAAABnAA0AAAAyAAkAAABnAAwAAAAyAAkAAABnAAsAAAAyAAkAAABnAAoAAAAyAAkAAABnAAkAAAAyAAkAAABnAAgAAAAyAAkAAABnAAcAAAAyAAkAAABnAAYAAAAyAAkAAABnAAUAAAAyAAkAAABnAAQAAAAyAAkAAABnAAMAAAAyAAkAAABnAAIAAAAyAAkAAABnAAEAAAAyAAkAAABmAAEAAAAyAAkAAABlAAEAAAAyAAkAAABkAAEAAAAyAAkAAABkAAIAAAAyAAkAAABjAAIAAAAyAAkAAABjAAMAAAAyAAkAAABjAAQAAAAyAAkAAABkAAQAAAAyAAkAAABkAAMAAAAyAAkAAABlAAMAAAAyAAkAAABlAAIAAAAyAAkAAABmAAIAAAAyAAkAAABmAAMAAAAyAAkAAABmAAQAAAAyAAkAAABlAAQAAAAyAAkAAABoAAEAAAAyAAkAAABoAAIAAAAyAAkAAABoAAMAAAAyAAkAAABoAAQAAAAyAAkAAABoAAUAAAAyAAkAAABoAAYAAAAyAAkAAABoAAcAAAAyAAkAAABoAAgAAAAyAAkAAABoAAkAAAAyAAkAAABoAAoAAAAyAAkAAABoAAsAAAAyAAkAAABpAAsAAAAyAAkAAABpAAoAAAAyAAkAAABpAAkAAAAyAAkAAABpAAgAAAAyAAkAAABpAAcAAAAyAAkAAABpAAYAAAAyAAkAAABpAAUAAAAyAAkAAABqAAUAAAAyAAkAAABqAAQAAAAyAAkAAABqAAMAAAAyAAkAAABqAAIAAAAyAAkAAABqAAEAAAAyAAkAAABpAAEAAAAyAAkAAABpAAIAAAAyAAkAAABpAAMAAAAyAAkAAABrAAEAAAAyAAkAAABrAAIAAAAyAAkAAABrAAMAAAAyAAkAAABrAAQAAAAyAAkAAABrAAUAAAAyAAkAAABrAAYAAAAyAAkAAABqAAYAAAAyAAkAAABqAAcAAAAyAAkAAABqAAgAAAAyAAkAAABqAAkAAAAyAAkAAABqAAoAAAAyAAkAAABqAAsAAAAyAAkAAABqAAwAAAAyAAkAAABpAAwAAAAyAAkAAABpAA0AAAAyAAkAAABoAA0AAAAyAAkAAABqAA0AAAAyAAkAAABrAA0AAAAyAAkAAABrAAwAAAAyAAkAAABrAAsAAAAyAAkAAABrAAoAAAAyAAkAAABrAAkAAAAyAAkAAABsAAkAAAAyAAkAAABsAAgAAAAyAAkAAABrAAcAAAAyAAkAAABcAA8AAAAyABAAAAAgAA4AAAAFABAAAAAiAAwAAAAFABAAAAAoAAsAAAAFABAAAAAlAAwAAAAFABAAAAAjAA4AAAAFABAAAAAmAA4AAAAFABAAAAAoAA0AAAAFABAAAAApAAsAAAAFABAAAAArAA0AAAAFABAAAAAuAAoAAAAFABAAAAAvAAsAAAAFABAAAAAuAAwAAAAFABAAAAAuAA4AAAAFABAAAAAvAA0AAAAFABAAAAAAAAkAAAAWAAsAAAD//wsAAAAFABAAAAD//w0AAAAFABAAAAD//w4AAAAFABAAAAA=")
+tile_set = ExtResource("5_e4ey3")
+
+[node name="SpawnPoint" type="Marker2D" parent="." unique_id=502355544]
+position = Vector2(45, 140)
+
+[node name="Gigi" parent="." unique_id=1692153737 instance=ExtResource("7_udx6v")]
+position = Vector2(45, 140)
+signature_color = Color(0.2, 0.95, 1, 1)
+
+[node name="Evie" parent="." unique_id=1579646163 instance=ExtResource("7_udx6v")]
+position = Vector2(45, 140)
+signature_color = Color(1, 0.3, 0.8, 1)
+
+[node name="Lucy" parent="." unique_id=557405691 instance=ExtResource("7_udx6v")]
+position = Vector2(45, 140)
+signature_color = Color(1, 0.64, 0, 1)
+
+[node name="Party" type="Node" parent="." unique_id=556762509 node_paths=PackedStringArray("members")]
+script = ExtResource("8_nlvay")
+members = [NodePath("../Gigi"), NodePath("../Evie"), NodePath("../Lucy")]
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=995622138]
+position = Vector2(240, 105)
+limit_left = 0
+limit_top = -30
+limit_right = 1700
+limit_bottom = 240
+script = ExtResource("9_v0nw6")
+
+[node name="CameraFollow" type="Node" parent="." unique_id=831732281 node_paths=PackedStringArray("camera", "party")]
+script = ExtResource("10_cpk7y")
+camera = NodePath("../Camera2D")
+party = NodePath("../Party")

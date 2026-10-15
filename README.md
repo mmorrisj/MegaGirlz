@@ -19,7 +19,7 @@ Abilities are not designed yet. They will be tuned to fit each sister's personal
 - **Side-scrolling action platformer.** Run, jump, shoot, slide, and climb ladders, Mega Man style.
 - **Single player with instant sister swapping.** Swapping is the core mechanic: the next sister appears in place, keeping position and momentum (even mid-jump), with a short teleport-beam flash.
 - **Local co-op deferred, not ruled out.** Input already goes through a per-player layer and characters are decoupled from who controls them, so 2–3 player co-op on one shared screen can be added later without a rewrite. No online multiplayer and no split-screen.
-- **Fixed-screen / locked-scroll camera.** Stages are built from screen-sized rooms and scroll-locked sections, like Mega Man. No zooming (it makes pixel art shimmer).
+- **Fixed-screen and horizontal scrolling sections.** Stages mix screen-sized rooms with scrolling sections, like Mega Man. Scrolling sections show off layered parallax backgrounds (`Parallax2D`). The camera scrolls in whole pixels and never zooms (zooming makes pixel art shimmer).
 - **Modern pixel art.** Detailed sprites combined with modern effects: HDR glow, dynamic 2D lights, particles, and parallax backgrounds (think *Dead Cells*, *Katana Zero*). Prototype with free/CC0 packs; final heroes likely commissioned.
 - **Game feel is a priority.** Hit-stop, screen shake, hit flash, squash and stretch, muzzle flashes, and particle effects are core features, not polish.
 - **Family-friendly difficulty.** Assume younger players, with forgiving fail states. Tune once playtesting starts.
@@ -48,7 +48,7 @@ Abilities are not designed yet. They will be tuned to fit each sister's personal
 2. Game feel pass on the basics: screen shake, muzzle flash, shot impact sparks, jump and land squash and stretch.
 3. Sister swapping: three sisters, instant swap with a beam flash, per-sister palettes.
 4. Controller support for the single player (auto-detect the first connected controller).
-5. Fixed-screen camera with room transitions.
+5. Camera: horizontal scrolling sections (done in the Magic Cliffs stage) and fixed-screen rooms with transitions.
 6. Visual pass: HDR glow, one dynamic light, parallax background.
 7. One enemy type (with hit flash and hit-stop) and each sister's signature ability.
 
@@ -103,7 +103,7 @@ CREDITS.md
 
 1. Install Godot 4.7 or newer (stable, standard build, not .NET).
 2. Clone the repo and open `project.godot` in Godot.
-3. Press F5 to run. The entry scene is `scenes/levels/test_room.tscn`.
+3. Press F5 to run. The entry scene is `scenes/levels/magic_cliffs.tscn`, a horizontal scrolling stage with parallax layers. `scenes/levels/test_room.tscn` is a single-screen room for testing mechanics (open it and press F6).
 
 Prototype controls (keyboard): move **A/D** or **arrows**, jump **Space/K/Z** (hold for a higher jump), shoot **J/X**, swap sister **E/O** (next) and **Q/U** (previous). Controller bindings: A jump, X shoot, RB/LB swap.
 
