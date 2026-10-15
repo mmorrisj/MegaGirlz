@@ -13,7 +13,8 @@ signal shot_fired
 
 const BUSTER_SHOT_SCENE: PackedScene = preload("res://scenes/projectiles/buster_shot.tscn")
 
-## Placeholder visor color; becomes the emissive color once real art exists.
+## Emissive color that identifies this sister in co-op. Not shown by the
+## placeholder Mega Bot art; applied once sisters get their own palettes.
 @export var signature_color: Color = Color.CYAN
 
 @export_group("Run")
@@ -36,7 +37,7 @@ const BUSTER_SHOT_SCENE: PackedScene = preload("res://scenes/projectiles/buster_
 @export_group("Shoot")
 ## Mega Man style limit on shots alive at once.
 @export var max_shots: int = 3
-@export var muzzle_offset: Vector2 = Vector2(14.0, -4.0)
+@export var muzzle_offset: Vector2 = Vector2(15.0, -5.0)
 
 ## The player controlling this sister. Null means no one (she stands still).
 var input: PlayerInput = null
@@ -49,11 +50,6 @@ var _is_rising_from_jump: bool = false
 var _live_shots: int = 0
 
 @onready var _visual: Node2D = $SquashPivot/Visual
-@onready var _visor: ColorRect = $SquashPivot/Visual/Visor
-
-
-func _ready() -> void:
-	_visor.color = signature_color
 
 
 func _physics_process(delta: float) -> void:

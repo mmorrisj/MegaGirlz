@@ -1,11 +1,13 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene load_steps=7 format=3]
 
 [ext_resource type="Script" path="res://scripts/characters/sister.gd" id="1_sister"]
 [ext_resource type="Script" path="res://scripts/components/squash_stretch.gd" id="2_squash"]
 [ext_resource type="Script" path="res://scripts/components/muzzle_flash.gd" id="3_muzzle"]
+[ext_resource type="Script" path="res://scripts/components/sister_animator.gd" id="4_animator"]
+[ext_resource type="SpriteFrames" path="res://assets/characters/placeholder/mega_bot/mega_bot_frames.tres" id="5_frames"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_body"]
-size = Vector2(16, 38)
+size = Vector2(12, 22)
 
 [node name="Sister" type="CharacterBody2D"]
 collision_layer = 2
@@ -16,36 +18,18 @@ script = ExtResource("1_sister")
 shape = SubResource("RectangleShape2D_body")
 
 [node name="SquashPivot" type="Node2D" parent="."]
-position = Vector2(0, 19)
+position = Vector2(0, 11)
 
 [node name="Visual" type="Node2D" parent="SquashPivot"]
-position = Vector2(0, -19)
+position = Vector2(0, -11)
 
-[node name="Body" type="ColorRect" parent="SquashPivot/Visual"]
-offset_left = -9.0
-offset_top = -19.0
-offset_right = 9.0
-offset_bottom = 19.0
-mouse_filter = 2
-color = Color(0.55, 0.6, 0.72, 1)
-
-[node name="Visor" type="ColorRect" parent="SquashPivot/Visual"]
-offset_left = 1.0
-offset_top = -14.0
-offset_right = 9.0
-offset_bottom = -9.0
-mouse_filter = 2
-
-[node name="Cannon" type="ColorRect" parent="SquashPivot/Visual"]
-offset_left = 6.0
-offset_top = -6.0
-offset_right = 14.0
-offset_bottom = -2.0
-mouse_filter = 2
-color = Color(0.35, 0.38, 0.48, 1)
+[node name="Sprite" type="AnimatedSprite2D" parent="SquashPivot/Visual"]
+position = Vector2(1, -3)
+sprite_frames = ExtResource("5_frames")
+animation = &"idle"
 
 [node name="MuzzleFlash" type="Node2D" parent="SquashPivot/Visual"]
-position = Vector2(16, -4)
+position = Vector2(14, -5)
 script = ExtResource("3_muzzle")
 
 [node name="Horizontal" type="ColorRect" parent="SquashPivot/Visual/MuzzleFlash"]
@@ -68,6 +52,12 @@ color = Color(2.5, 2.2, 1.2, 1)
 script = ExtResource("2_squash")
 target = NodePath("../SquashPivot")
 
+[node name="Animator" type="Node" parent="." node_paths=PackedStringArray("body", "sprite")]
+script = ExtResource("4_animator")
+body = NodePath("..")
+sprite = NodePath("../SquashPivot/Visual/Sprite")
+
 [connection signal="jumped" from="." to="SquashStretch" method="play_jump"]
 [connection signal="landed" from="." to="SquashStretch" method="play_land"]
 [connection signal="shot_fired" from="." to="SquashPivot/Visual/MuzzleFlash" method="flash"]
+[connection signal="shot_fired" from="." to="Animator" method="play_shoot"]

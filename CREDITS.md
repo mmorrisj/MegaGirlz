@@ -4,4 +4,4 @@ Third-party assets used in MegaGirlz. Each entry needs a matching `licenses/<pac
 
 | Asset pack | Author | Source | License | Attribution required? |
 |---|---|---|---|---|
-| _None yet_ | | | | |
+| Mega Bot (placeholder player, Bay Area tileset and background) | Luis Zuno (ansimuz) | https://ansimuz.itch.io/mega-bot | CC0 1.0 | No (credit appreciated) |

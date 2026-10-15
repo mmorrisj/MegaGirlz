@@ -1,0 +1,74 @@
+[gd_resource type="SpriteFrames" format=3]
+
+[ext_resource type="Texture2D" path="res://assets/characters/placeholder/mega_bot/idle.png" id="1_b0vub"]
+[ext_resource type="Texture2D" path="res://assets/characters/placeholder/mega_bot/jump.png" id="2_mgfia"]
+[ext_resource type="Texture2D" path="res://assets/characters/placeholder/mega_bot/run_1.png" id="3_2d357"]
+[ext_resource type="Texture2D" path="res://assets/characters/placeholder/mega_bot/run_2.png" id="4_vuosi"]
+[ext_resource type="Texture2D" path="res://assets/characters/placeholder/mega_bot/run_3.png" id="5_args0"]
+[ext_resource type="Texture2D" path="res://assets/characters/placeholder/mega_bot/run_4.png" id="6_1aui5"]
+[ext_resource type="Texture2D" path="res://assets/characters/placeholder/mega_bot/run_shoot_1.png" id="7_ylq2n"]
+[ext_resource type="Texture2D" path="res://assets/characters/placeholder/mega_bot/run_shoot_2.png" id="8_nev7l"]
+[ext_resource type="Texture2D" path="res://assets/characters/placeholder/mega_bot/run_shoot_3.png" id="9_31cm2"]
+[ext_resource type="Texture2D" path="res://assets/characters/placeholder/mega_bot/run_shoot_4.png" id="10_6fnfo"]
+[ext_resource type="Texture2D" path="res://assets/characters/placeholder/mega_bot/shoot.png" id="11_28l43"]
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_b0vub")
+}],
+"loop": 0,
+"name": &"idle",
+"speed": 1.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_mgfia")
+}],
+"loop": 0,
+"name": &"jump",
+"speed": 1.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_2d357")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_vuosi")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_args0")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_1aui5")
+}],
+"loop": 1,
+"name": &"run",
+"speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("7_ylq2n")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_nev7l")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_31cm2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_6fnfo")
+}],
+"loop": 1,
+"name": &"run_shoot",
+"speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("11_28l43")
+}],
+"loop": 0,
+"name": &"shoot",
+"speed": 1.0
+}]
