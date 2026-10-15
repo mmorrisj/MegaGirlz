@@ -3,7 +3,13 @@ extends CharacterBody2D
 ## A playable sister: run, jump, and shoot.
 ##
 ## Shared by Gigi, Evie, and Lucy. Each sister's signature ability will be a
-## separate child component, not a subclass.
+## separate child component, not a subclass. Game-feel effects listen to
+## this node's signals instead of living in this script.
+
+signal jumped
+## fall_speed is the downward speed just before touching the ground.
+signal landed(fall_speed: float)
+signal shot_fired
 
 const BUSTER_SHOT_SCENE: PackedScene = preload("res://scenes/projectiles/buster_shot.tscn")
 
@@ -42,8 +48,8 @@ var _jump_buffer_timer: float = 0.0
 var _is_rising_from_jump: bool = false
 var _live_shots: int = 0
 
-@onready var _visual: Node2D = $Visual
-@onready var _visor: ColorRect = $Visual/Visor
+@onready var _visual: Node2D = $SquashPivot/Visual
+@onready var _visor: ColorRect = $SquashPivot/Visual/Visor
 
 
 func _ready() -> void:
@@ -59,7 +65,11 @@ func _physics_process(delta: float) -> void:
 		_handle_shoot()
 	else:
 		velocity.x = 0.0
+	var was_on_floor: bool = is_on_floor()
+	var fall_speed: float = velocity.y
 	move_and_slide()
+	if is_on_floor() and not was_on_floor:
+		landed.emit(fall_speed)
 
 
 func _get_rise_gravity() -> float:
@@ -107,6 +117,7 @@ func _handle_jump() -> void:
 		_jump_buffer_timer = 0.0
 		_coyote_timer = 0.0
 		_is_rising_from_jump = true
+		jumped.emit()
 	elif _is_rising_from_jump and not input.is_jump_held():
 		velocity.y *= jump_cut_multiplier
 		_is_rising_from_jump = false
@@ -123,6 +134,7 @@ func _handle_shoot() -> void:
 	shot.global_position = global_position + Vector2(muzzle_offset.x * facing, muzzle_offset.y)
 	_live_shots += 1
 	shot.tree_exited.connect(_on_shot_tree_exited)
+	shot_fired.emit()
 
 
 func _on_shot_tree_exited() -> void:
