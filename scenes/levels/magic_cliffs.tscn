@@ -67,14 +67,17 @@ position = Vector2(45, 140)
 [node name="Gigi" parent="." unique_id=1692153737 instance=ExtResource("7_udx6v")]
 position = Vector2(45, 140)
 signature_color = Color(0.2, 0.95, 1, 1)
+hair_color = Color(0.431, 0.384, 0.588, 1)
 
 [node name="Evie" parent="." unique_id=1579646163 instance=ExtResource("7_udx6v")]
 position = Vector2(45, 140)
 signature_color = Color(1, 0.3, 0.8, 1)
+hair_color = Color(0.941, 0.91, 1, 1)
 
 [node name="Lucy" parent="." unique_id=557405691 instance=ExtResource("7_udx6v")]
 position = Vector2(45, 140)
 signature_color = Color(1, 0.64, 0, 1)
+hair_color = Color(0.871, 0.376, 0.196, 1)
 
 [node name="Party" type="Node" parent="." unique_id=556762509 node_paths=PackedStringArray("members")]
 script = ExtResource("8_nlvay")

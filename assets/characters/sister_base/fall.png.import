@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cjmtr6o4ed7mf"
-path="res://.godot/imported/run_shoot_1.png-e05bbe400d29860035eee77cda4f0844.ctex"
+uid="uid://cgpugsfxp4pbx"
+path="res://.godot/imported/fall.png-d86bde23305dbfe59e2a42c61d7bf428.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/characters/placeholder/mega_bot/run_shoot_1.png"
-dest_files=["res://.godot/imported/run_shoot_1.png-e05bbe400d29860035eee77cda4f0844.ctex"]
+source_file="res://assets/characters/sister_base/fall.png"
+dest_files=["res://.godot/imported/fall.png-d86bde23305dbfe59e2a42c61d7bf428.ctex"]
 
 [params]
 

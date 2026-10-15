@@ -8,7 +8,6 @@ Files used from the pack (renamed to snake_case):
 
 | Pack path | Repo path |
 |---|---|
-| `Sprites/player/*.png` | `assets/characters/placeholder/mega_bot/` |
 | `Environments/Bay area/layers/tileset.png` | `assets/tiles/bay_area/tileset.png` |
 | `Environments/Bay area/layers/background.png` | `assets/backgrounds/bay_area/background.png` |
 

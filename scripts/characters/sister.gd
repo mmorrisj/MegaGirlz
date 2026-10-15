@@ -1,6 +1,6 @@
 class_name Sister
 extends CharacterBody2D
-## A playable sister: run, jump, and shoot.
+## A playable sister: run, jump, and slash with her sword.
 ##
 ## Shared by Gigi, Evie, and Lucy. Each sister's signature ability will be a
 ## separate child component, not a subclass. Game-feel effects listen to
@@ -9,15 +9,16 @@ extends CharacterBody2D
 signal jumped
 ## fall_speed is the downward speed just before touching the ground.
 signal landed(fall_speed: float)
-signal shot_fired
+## Emitted when a sword slash starts.
+signal attacked
 ## Emitted when this sister takes over from another during a swap.
 signal swapped_in
 
-const BUSTER_SHOT_SCENE: PackedScene = preload("res://scenes/projectiles/buster_shot.tscn")
-
-## Identifies this sister: drives her sprite palette and swap beam, and
-## becomes her emissive color once real art exists.
+## Identifies this sister: her outfit, sword slash, and swap beam use it.
 @export var signature_color: Color = Color.CYAN
+## Lightest hair shade; darker shades are derived from it. The boots share
+## the hair colors in the base sprite.
+@export var hair_color: Color = Color(1.0, 0.663, 0.224)
 
 @export_group("Run")
 @export var run_speed: float = 140.0
@@ -36,10 +37,13 @@ const BUSTER_SHOT_SCENE: PackedScene = preload("res://scenes/projectiles/buster_
 ## A jump pressed this long before landing still fires on landing.
 @export var jump_buffer_time: float = 0.1
 
-@export_group("Shoot")
-## Mega Man style limit on shots alive at once.
-@export var max_shots: int = 3
-@export var muzzle_offset: Vector2 = Vector2(15.0, -5.0)
+@export_group("Attack")
+## Length of a slash; matches the 8-frame attack animation at 12 fps.
+@export var attack_duration: float = 0.66
+## Seconds into the slash when the sword starts and stops hitting (the
+## frames where the blade sweeps forward).
+@export var attack_active_start: float = 0.3
+@export var attack_active_end: float = 0.55
 
 ## The player controlling this sister. Null means no one (she stands still).
 var input: PlayerInput = null
@@ -49,12 +53,14 @@ var facing: int = 1
 var _coyote_timer: float = 0.0
 var _jump_buffer_timer: float = 0.0
 var _is_rising_from_jump: bool = false
-var _live_shots: int = 0
+## Seconds since the current slash started, or -1 when not attacking.
+var _attack_time: float = -1.0
 
 @onready var _visual: Node2D = $SquashPivot/Visual
 @onready var _sprite: AnimatedSprite2D = $SquashPivot/Visual/Sprite
 @onready var _collision: CollisionShape2D = $CollisionShape2D
 @onready var _swap_beam: SwapBeam = $SquashPivot/Visual/SwapBeam
+@onready var _sword_hitbox: Area2D = $SquashPivot/Visual/SwordHitbox
 
 
 func _ready() -> void:
@@ -65,10 +71,11 @@ func _ready() -> void:
 func _physics_process(delta: float) -> void:
 	_update_timers(delta)
 	_apply_gravity(delta)
+	_update_attack(delta)
 	if input:
 		_handle_run()
 		_handle_jump()
-		_handle_shoot()
+		_handle_attack()
 	else:
 		velocity.x = 0.0
 	var was_on_floor: bool = is_on_floor()
@@ -85,6 +92,11 @@ func set_active(active: bool) -> void:
 	_collision.disabled = not active
 	if not active:
 		input = null
+		_end_attack()
+
+
+func is_attacking() -> bool:
+	return _attack_time >= 0.0
 
 
 ## Steps in where `other` stands, keeping her motion so swaps work mid-jump.
@@ -101,9 +113,12 @@ func _apply_palette() -> void:
 	var palette := _sprite.material as ShaderMaterial
 	if palette == null:
 		return
-	palette.set_shader_parameter(&"target_main", signature_color)
-	palette.set_shader_parameter(&"target_shade", signature_color.darkened(0.45))
-	palette.set_shader_parameter(&"target_accent", signature_color.lightened(0.6))
+	palette.set_shader_parameter(&"target_outfit", signature_color)
+	palette.set_shader_parameter(&"target_outfit_shade", signature_color.darkened(0.5))
+	palette.set_shader_parameter(&"target_hair", hair_color)
+	palette.set_shader_parameter(&"target_hair_mid", hair_color.darkened(0.3))
+	palette.set_shader_parameter(&"target_hair_dark", hair_color.darkened(0.55))
+	palette.set_shader_parameter(&"target_slash", signature_color.lightened(0.45))
 
 
 func _set_facing(direction: int) -> void:
@@ -161,18 +176,22 @@ func _handle_jump() -> void:
 		_is_rising_from_jump = false
 
 
-func _handle_shoot() -> void:
-	if not input.is_shoot_just_pressed() or _live_shots >= max_shots:
+func _handle_attack() -> void:
+	if input.is_attack_just_pressed() and not is_attacking():
+		_attack_time = 0.0
+		attacked.emit()
+
+
+func _update_attack(delta: float) -> void:
+	if not is_attacking():
 		return
-	var shot: BusterShot = BUSTER_SHOT_SCENE.instantiate()
-	shot.direction = facing
-	# Added to the room, not to us, so it keeps flying if we are swapped out.
-	get_parent().add_child(shot)
-	shot.global_position = global_position + Vector2(muzzle_offset.x * facing, muzzle_offset.y)
-	_live_shots += 1
-	shot.tree_exited.connect(_on_shot_tree_exited)
-	shot_fired.emit()
+	_attack_time += delta
+	if _attack_time >= attack_duration:
+		_end_attack()
+		return
+	_sword_hitbox.monitoring = _attack_time >= attack_active_start and _attack_time < attack_active_end
 
 
-func _on_shot_tree_exited() -> void:
-	_live_shots -= 1
+func _end_attack() -> void:
+	_attack_time = -1.0
+	_sword_hitbox.monitoring = false

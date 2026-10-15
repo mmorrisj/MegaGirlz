@@ -63,25 +63,18 @@ func test_swap_cooldown(ctx: TestContext) -> void:
 	ctx.check(party.get_active().name == "Evie", "A second press inside the cooldown should be ignored")
 
 
-func test_swapped_out_sisters_shots_keep_flying(ctx: TestContext) -> void:
+func test_swapping_mid_slash_ends_it(ctx: TestContext) -> void:
 	var room: Node = ctx.load_room()
 	var gigi: Sister = room.get_node("Gigi")
+	var evie: Sister = room.get_node("Evie")
+	var hitbox: Area2D = gigi.get_node("SquashPivot/Visual/SwordHitbox")
 	await ctx.physics_frames(30)
 	await ctx.tap_key(KEY_J)
-	var shot: BusterShot = null
-	for child in room.get_children():
-		if child is BusterShot:
-			shot = child
-	ctx.check(shot != null, "The shot should be added to the room")
-	if shot == null:
-		return
-	var shot_x: float = shot.global_position.x
+	await ctx.physics_frames(20)
+	ctx.check(hitbox.monitoring, "Gigi's sword should be live mid-swing")
 	await ctx.tap_key(KEY_E)
-	await ctx.physics_frames(5)
-	ctx.check(is_instance_valid(shot) and shot.global_position.x > shot_x + 10.0,
-		"Gigi's shot should keep moving after she is swapped out")
-	await ctx.physics_frames(90)
-	ctx.check(gigi._live_shots == 0, "Gigi's shot count should clear once her shot hits a wall")
+	ctx.check(not gigi.is_attacking() and not hitbox.monitoring, "Swapping out should end Gigi's slash")
+	ctx.check(not evie.is_attacking(), "Evie should arrive ready, not mid-slash")
 
 
 func test_each_sister_has_her_own_palette(ctx: TestContext) -> void:
@@ -91,6 +84,6 @@ func test_each_sister_has_her_own_palette(ctx: TestContext) -> void:
 	for sister_name in ["Gigi", "Evie", "Lucy"]:
 		var sprite: AnimatedSprite2D = room.get_node("%s/SquashPivot/Visual/Sprite" % sister_name)
 		var palette: ShaderMaterial = sprite.material
-		colors.append(palette.get_shader_parameter(&"target_main"))
+		colors.append(palette.get_shader_parameter(&"target_outfit"))
 	ctx.check(colors[0] != colors[1] and colors[1] != colors[2] and colors[0] != colors[2],
 		"Each sister should get a distinct main color, got %s" % [colors])

@@ -11,6 +11,7 @@ Files used from the pack (renamed to snake_case where needed):
 | `World/tileset.png` | `assets/tiles/magic_cliffs/tileset.png` |
 | `World/world-tileset.tres` | `assets/tiles/magic_cliffs/magic_cliffs_tileset.tres` (texture path updated) |
 | `World/sky.png`, `clouds.png`, `sea.png`, `far-grounds.png` | `assets/backgrounds/magic_cliffs/` |
+| `Player/spritesheets/*.png` | `assets/characters/sister_base/` (recolored per sister by a shader) |
 | `World/world.tscn` (tile layout only) | `scenes/levels/magic_cliffs.tscn` (converted to `TileMapLayer` and `Parallax2D`) |
 
-Not in the repo yet: the player sprite sheets, enemies (fox, shuriken thrower), and music.
+Not in the repo yet: enemies (fox, shuriken thrower) and music.

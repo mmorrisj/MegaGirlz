@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dw8w1ymuqu01t"
-path="res://.godot/imported/run_shoot_4.png-311b5102d07db7a351c6603f2faf8572.ctex"
+uid="uid://bsa7upo4jswq7"
+path="res://.godot/imported/jump.png-6336ef454613c75410a774f36188e7ff.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/characters/placeholder/mega_bot/run_shoot_4.png"
-dest_files=["res://.godot/imported/run_shoot_4.png-311b5102d07db7a351c6603f2faf8572.ctex"]
+source_file="res://assets/characters/sister_base/jump.png"
+dest_files=["res://.godot/imported/jump.png-6336ef454613c75410a774f36188e7ff.ctex"]
 
 [params]
 

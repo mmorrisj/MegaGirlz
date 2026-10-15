@@ -11,7 +11,7 @@ var player_index: int
 var _move_left: StringName
 var _move_right: StringName
 var _jump: StringName
-var _shoot: StringName
+var _attack: StringName
 var _swap_next: StringName
 var _swap_prev: StringName
 
@@ -21,7 +21,7 @@ func _init(index: int) -> void:
 	_move_left = InputBindings.action_name(index, InputBindings.MOVE_LEFT)
 	_move_right = InputBindings.action_name(index, InputBindings.MOVE_RIGHT)
 	_jump = InputBindings.action_name(index, InputBindings.JUMP)
-	_shoot = InputBindings.action_name(index, InputBindings.SHOOT)
+	_attack = InputBindings.action_name(index, InputBindings.ATTACK)
 	_swap_next = InputBindings.action_name(index, InputBindings.SWAP_NEXT)
 	_swap_prev = InputBindings.action_name(index, InputBindings.SWAP_PREV)
 
@@ -39,8 +39,8 @@ func is_jump_just_pressed() -> bool:
 	return Input.is_action_just_pressed(_jump)
 
 
-func is_shoot_just_pressed() -> bool:
-	return Input.is_action_just_pressed(_shoot)
+func is_attack_just_pressed() -> bool:
+	return Input.is_action_just_pressed(_attack)
 
 
 func is_swap_next_just_pressed() -> bool:

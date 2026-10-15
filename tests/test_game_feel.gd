@@ -26,22 +26,17 @@ func test_jump_and_land_squash(ctx: TestContext) -> void:
 	ctx.check(pivot.scale.is_equal_approx(Vector2.ONE), "Squash should recover to scale 1")
 
 
-func test_muzzle_flash(ctx: TestContext) -> void:
-	var gigi: Sister = ctx.load_room().get_node("Gigi")
-	var flash: Node2D = gigi.get_node("SquashPivot/Visual/MuzzleFlash")
-	await ctx.physics_frames(30)
-	ctx.check(not flash.visible, "Muzzle flash should be hidden at rest")
-	await ctx.tap_key(KEY_J)
-	ctx.check(flash.visible, "Muzzle flash should show when firing")
-	await ctx.physics_frames(6)
-	ctx.check(not flash.visible, "Muzzle flash should hide quickly")
 
 
 func test_impact_sparks_and_shake(ctx: TestContext) -> void:
 	var room: Node = ctx.load_room()
 	var camera: ShakeCamera = room.get_node("Camera2D")
 	await ctx.physics_frames(30)
-	await ctx.tap_key(KEY_J)
+	# The arm-cannon shot is kept for a future ranged ability; fire one directly
+	# at the crates on the right.
+	var shot: BusterShot = load("res://scenes/projectiles/buster_shot.tscn").instantiate()
+	room.add_child(shot)
+	shot.global_position = Vector2(300, 224)
 	var saw_spark: bool = false
 	var max_offset: float = 0.0
 	for i in 90:

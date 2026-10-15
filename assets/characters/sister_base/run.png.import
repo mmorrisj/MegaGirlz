@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://7kwvgivyrhyp"
-path="res://.godot/imported/run_shoot_3.png-3cb914ea3315a6d29300b3bea1f2cdc2.ctex"
+uid="uid://ce35qqksjwi3o"
+path="res://.godot/imported/run.png-20d5f37c89776fa7c77b8808819ba958.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/characters/placeholder/mega_bot/run_shoot_3.png"
-dest_files=["res://.godot/imported/run_shoot_3.png-3cb914ea3315a6d29300b3bea1f2cdc2.ctex"]
+source_file="res://assets/characters/sister_base/run.png"
+dest_files=["res://.godot/imported/run.png-20d5f37c89776fa7c77b8808819ba958.ctex"]
 
 [params]
 
