@@ -1,10 +1,10 @@
 # MegaGirlz (working title)
 
-A side-scrolling, local co-op action platformer for 1–3 players, built in **Godot 4**, in the spirit of Mega Man. Players control three robotic sisters, **Gigi**, **Evie**, and **Lucy**, each with a unique ability, running, jumping, and shooting through stages on a single shared screen.
+A side-scrolling, single-player action platformer built in **Godot 4**, in the spirit of Mega Man. The player controls a team of three robotic sisters, **Gigi**, **Evie**, and **Lucy**, swapping between them on the fly to use each one's unique ability. Local co-op may come later.
 
 ## Concept
 
-The sisters fight through a series of stages to recover something lost (story TBD). Combat and traversal reward combining their abilities.
+The sisters fight through a series of stages to recover something lost (story TBD). One sister is on stage at a time; the player swaps instantly to whichever sister's ability fits the moment, so combat and traversal reward combining their abilities.
 
 | Sister | Ability | Signature color (placeholder) |
 |---|---|---|
@@ -12,14 +12,14 @@ The sisters fight through a series of stages to recover something lost (story TB
 | Evie | TBD | Magenta |
 | Lucy | TBD | Amber |
 
-Abilities are not designed yet. They will be tuned to fit each sister's personality. Each sister has an emissive element (core, visor, or arm cannon) in her signature color so players can tell sisters apart at a glance in co-op.
+Abilities are not designed yet. They will be tuned to fit each sister's personality. Each sister has her own palette and an emissive element (core, visor, or arm cannon) in her signature color, so the player always knows who is on stage. The placeholder art shows this with a Mega Man style palette swap.
 
 ## Core design decisions
 
 - **Side-scrolling action platformer.** Run, jump, shoot, slide, and climb ladders, Mega Man style.
-- **Local co-op only, one shared screen.** No online multiplayer and no split-screen. Networking would multiply scope.
-- **1–3 players with character swapping.** Any player can cycle to a sister not controlled by another player. Solo play swaps among all three. This must be supported from the start, not retrofitted.
-- **Fixed-screen / locked-scroll camera.** Stages are built from screen-sized rooms and scroll-locked sections, like Mega Man. This keeps all players framed without zooming (which makes pixel art shimmer). Players who fall behind are brought back with a catch-up rule (e.g. teleport or bubble respawn, TBD).
+- **Single player with instant sister swapping.** Swapping is the core mechanic: the next sister appears in place, keeping position and momentum (even mid-jump), with a short teleport-beam flash.
+- **Local co-op deferred, not ruled out.** Input already goes through a per-player layer and characters are decoupled from who controls them, so 2–3 player co-op on one shared screen can be added later without a rewrite. No online multiplayer and no split-screen.
+- **Fixed-screen / locked-scroll camera.** Stages are built from screen-sized rooms and scroll-locked sections, like Mega Man. No zooming (it makes pixel art shimmer).
 - **Modern pixel art.** Detailed sprites combined with modern effects: HDR glow, dynamic 2D lights, particles, and parallax backgrounds (think *Dead Cells*, *Katana Zero*). Prototype with free/CC0 packs; final heroes likely commissioned.
 - **Game feel is a priority.** Hit-stop, screen shake, hit flash, squash and stretch, muzzle flashes, and particle effects are core features, not polish.
 - **Family-friendly difficulty.** Assume younger players, with forgiving fail states. Tune once playtesting starts.
@@ -39,21 +39,22 @@ Abilities are not designed yet. They will be tuned to fit each sister's personal
 - Renderer: **Forward+** (HDR 2D requires Forward+ or Mobile)
 - Map editor: Godot's built-in `TileMapLayer` (Tiled optional)
 - Sprite editing: Aseprite
-- Input: keyboard + up to 3 game controllers
+- Input: keyboard or game controller (per-player input layer, ready for co-op later)
 
 ## Roadmap
 
 ### Milestone 1: Vertical slice
 1. One sister running, jumping, and shooting in a test room, with keyboard input and placeholder CC0 art.
 2. Game feel pass on the basics: screen shake, muzzle flash, shot impact sparks, jump and land squash and stretch.
-3. Controller input and a second player, with per-device input mapping.
-4. Third player plus character swapping.
-5. Fixed-screen camera with room transitions and a catch-up rule for players left behind.
+3. Sister swapping: three sisters, instant swap with a beam flash, per-sister palettes.
+4. Controller support for the single player (auto-detect the first connected controller).
+5. Fixed-screen camera with room transitions.
 6. Visual pass: HDR glow, one dynamic light, parallax background.
 7. One enemy type (with hit flash and hit-stop) and each sister's signature ability.
 
 ### Later
-- Health, damage, and a respawn/assist mechanic
+- Health, damage, and respawn
+- Local co-op for 2–3 players (drop-in/drop-out, catch-up rule for players left behind)
 - Bosses, more stages, stage select
 - Commissioned sister sprites
 - Audio, menus, save state
@@ -104,7 +105,7 @@ CREDITS.md
 2. Clone the repo and open `project.godot` in Godot.
 3. Press F5 to run. The entry scene is `scenes/levels/test_room.tscn`.
 
-Prototype controls (player 1, keyboard): move **A/D** or **arrows**, jump **Space/K/Z** (hold for a higher jump), shoot **J/X**.
+Prototype controls (keyboard): move **A/D** or **arrows**, jump **Space/K/Z** (hold for a higher jump), shoot **J/X**, swap sister **E/O** (next) and **Q/U** (previous). Controller bindings: A jump, X shoot, RB/LB swap.
 
 Movement feel is tuned through `@export` values on the `Sister` node (Inspector panel): run speed, jump height, time to apex, coyote time, jump buffer, max shots.
 

@@ -1,13 +1,12 @@
 [gd_scene format=4]
 
-[ext_resource type="Script" path="res://scripts/levels/test_room.gd" id="1_room"]
 [ext_resource type="PackedScene" path="res://scenes/characters/sister.tscn" id="2_sister"]
 [ext_resource type="Script" path="res://scripts/systems/shake_camera.gd" id="3_camera"]
 [ext_resource type="Texture2D" path="res://assets/backgrounds/bay_area/background.png" id="3_knmjg"]
 [ext_resource type="TileSet" path="res://assets/tiles/bay_area/bay_area_tileset.tres" id="4_asmw1"]
+[ext_resource type="Script" path="res://scripts/systems/party.gd" id="5_knmjg"]
 
 [node name="TestRoom" type="Node2D" unique_id=1247231533]
-script = ExtResource("1_room")
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1707634350]
 position = Vector2(240, 135)
@@ -35,3 +34,15 @@ tile_set = ExtResource("4_asmw1")
 [node name="Gigi" parent="." unique_id=2109402592 instance=ExtResource("2_sister")]
 position = Vector2(80, 220)
 signature_color = Color(0.2, 0.95, 1, 1)
+
+[node name="Evie" parent="." unique_id=246288849 instance=ExtResource("2_sister")]
+position = Vector2(80, 220)
+signature_color = Color(1, 0.3, 0.8, 1)
+
+[node name="Lucy" parent="." unique_id=500803158 instance=ExtResource("2_sister")]
+position = Vector2(80, 220)
+signature_color = Color(1, 0.64, 0, 1)
+
+[node name="Party" type="Node" parent="." unique_id=137656589 node_paths=PackedStringArray("members")]
+script = ExtResource("5_knmjg")
+members = [NodePath("../Gigi"), NodePath("../Evie"), NodePath("../Lucy")]

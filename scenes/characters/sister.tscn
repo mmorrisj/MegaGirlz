@@ -1,10 +1,16 @@
-[gd_scene load_steps=7 format=3]
+[gd_scene load_steps=10 format=3]
 
 [ext_resource type="Script" path="res://scripts/characters/sister.gd" id="1_sister"]
 [ext_resource type="Script" path="res://scripts/components/squash_stretch.gd" id="2_squash"]
 [ext_resource type="Script" path="res://scripts/components/muzzle_flash.gd" id="3_muzzle"]
 [ext_resource type="Script" path="res://scripts/components/sister_animator.gd" id="4_animator"]
 [ext_resource type="SpriteFrames" path="res://assets/characters/placeholder/mega_bot/mega_bot_frames.tres" id="5_frames"]
+[ext_resource type="Shader" path="res://assets/vfx/palette_swap.gdshader" id="6_palette"]
+[ext_resource type="Script" path="res://scripts/components/swap_beam.gd" id="7_beam"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_palette"]
+resource_local_to_scene = true
+shader = ExtResource("6_palette")
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_body"]
 size = Vector2(12, 22)
@@ -25,6 +31,7 @@ position = Vector2(0, -11)
 
 [node name="Sprite" type="AnimatedSprite2D" parent="SquashPivot/Visual"]
 position = Vector2(1, -3)
+material = SubResource("ShaderMaterial_palette")
 sprite_frames = ExtResource("5_frames")
 animation = &"idle"
 
@@ -48,6 +55,18 @@ offset_bottom = 3.0
 mouse_filter = 2
 color = Color(2.5, 2.2, 1.2, 1)
 
+[node name="SwapBeam" type="Node2D" parent="SquashPivot/Visual" node_paths=PackedStringArray("sprite", "beam")]
+script = ExtResource("7_beam")
+sprite = NodePath("../Sprite")
+beam = NodePath("Beam")
+
+[node name="Beam" type="ColorRect" parent="SquashPivot/Visual/SwapBeam"]
+offset_left = -6.0
+offset_top = -60.0
+offset_right = 6.0
+offset_bottom = 11.0
+mouse_filter = 2
+
 [node name="SquashStretch" type="Node" parent="." node_paths=PackedStringArray("target")]
 script = ExtResource("2_squash")
 target = NodePath("../SquashPivot")
@@ -61,3 +80,4 @@ sprite = NodePath("../SquashPivot/Visual/Sprite")
 [connection signal="landed" from="." to="SquashStretch" method="play_land"]
 [connection signal="shot_fired" from="." to="SquashPivot/Visual/MuzzleFlash" method="flash"]
 [connection signal="shot_fired" from="." to="Animator" method="play_shoot"]
+[connection signal="swapped_in" from="." to="SquashPivot/Visual/SwapBeam" method="play"]

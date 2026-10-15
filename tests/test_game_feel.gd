@@ -39,7 +39,6 @@ func test_muzzle_flash(ctx: TestContext) -> void:
 
 func test_impact_sparks_and_shake(ctx: TestContext) -> void:
 	var room: Node = ctx.load_room()
-	var gigi: Sister = room.get_node("Gigi")
 	var camera: ShakeCamera = room.get_node("Camera2D")
 	await ctx.physics_frames(30)
 	await ctx.tap_key(KEY_J)
@@ -47,12 +46,12 @@ func test_impact_sparks_and_shake(ctx: TestContext) -> void:
 	var max_offset: float = 0.0
 	for i in 90:
 		await ctx.physics_frames(1)
-		saw_spark = saw_spark or _has_sparks(gigi)
+		saw_spark = saw_spark or _has_sparks(room)
 		max_offset = maxf(max_offset, camera.offset.length())
 	ctx.check(saw_spark, "A wall hit should spawn sparks")
 	ctx.check(max_offset > 0.0 and max_offset <= 10.0, "Impact should shake 1-10 px, got %.1f" % max_offset)
 	ctx.check(camera.offset == Vector2.ZERO, "Camera should settle after shaking")
-	ctx.check(not _has_sparks(gigi), "Sparks should free themselves")
+	ctx.check(not _has_sparks(room), "Sparks should free themselves")
 
 
 func test_shake_uses_whole_pixels(ctx: TestContext) -> void:
