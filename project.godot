@@ -39,4 +39,4 @@ window/stretch/scale_mode="integer"
 textures/canvas_textures/default_texture_filter=0
 2d/snap/snap_2d_transforms_to_pixel=true
 viewport/hdr_2d=true
-environment/defaults/default_clear_color=Color(0.06, 0.07, 0.12, 1)
+environment/defaults/default_clear_color=Color(0.859, 0.255, 0.38, 1)

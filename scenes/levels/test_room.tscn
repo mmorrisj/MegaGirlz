@@ -1,118 +1,37 @@
-[gd_scene load_steps=10 format=3]
+[gd_scene format=4]
 
 [ext_resource type="Script" path="res://scripts/levels/test_room.gd" id="1_room"]
 [ext_resource type="PackedScene" path="res://scenes/characters/sister.tscn" id="2_sister"]
 [ext_resource type="Script" path="res://scripts/systems/shake_camera.gd" id="3_camera"]
+[ext_resource type="Texture2D" path="res://assets/backgrounds/bay_area/background.png" id="3_knmjg"]
+[ext_resource type="TileSet" path="res://assets/tiles/bay_area/bay_area_tileset.tres" id="4_asmw1"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_Floor"]
-size = Vector2(480, 24)
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_LeftWall"]
-size = Vector2(16, 246)
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_RightWall"]
-size = Vector2(16, 246)
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_LowPlatform"]
-size = Vector2(80, 12)
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_HighPlatform"]
-size = Vector2(80, 12)
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_Step"]
-size = Vector2(64, 40)
-
-[node name="TestRoom" type="Node2D"]
+[node name="TestRoom" type="Node2D" unique_id=1247231533]
 script = ExtResource("1_room")
 
-[node name="Camera2D" type="Camera2D" parent="."]
+[node name="Camera2D" type="Camera2D" parent="." unique_id=1707634350]
 position = Vector2(240, 135)
 script = ExtResource("3_camera")
 
-[node name="Floor" type="StaticBody2D" parent="."]
-position = Vector2(240, 258)
+[node name="Background" type="Parallax2D" parent="." unique_id=412236936]
+scroll_scale = Vector2(0.5, 1)
+repeat_size = Vector2(144, 0)
+repeat_times = 5
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Floor"]
-shape = SubResource("RectangleShape2D_Floor")
+[node name="Sea" type="Sprite2D" parent="Background" unique_id=185494731]
+position = Vector2(0, 30)
+texture = ExtResource("3_knmjg")
+centered = false
 
-[node name="ColorRect" type="ColorRect" parent="Floor"]
-offset_left = -240.0
-offset_top = -12.0
-offset_right = 240.0
-offset_bottom = 12.0
-mouse_filter = 2
-color = Color(0.2, 0.24, 0.34, 1)
+[node name="Decor" type="TileMapLayer" parent="." unique_id=560215874]
+tile_map_data = PackedByteArray("AAAFAAsAAAAAAAIAAAAFAAwAAAAAAAMAAAAFAA0AAAAAAAQAAAAFAA4AAAAAAAUAAAAJAA0AAAAEAAMAAAAJAA4AAAAEAAQAAAALAA0AAAAEAAMAAAALAA4AAAAEAAQAAAA=")
+tile_set = ExtResource("4_asmw1")
+collision_enabled = false
 
-[node name="LeftWall" type="StaticBody2D" parent="."]
-position = Vector2(8, 123)
+[node name="Level" type="TileMapLayer" parent="." unique_id=241738005]
+tile_map_data = PackedByteArray("AAAAAA8AAAADAAIAAAAAABAAAAABAAQAAAABAA8AAAAEAAIAAAABABAAAAABAAQAAAACAA8AAAADAAIAAAACABAAAAABAAQAAAADAA8AAAAEAAIAAAADABAAAAABAAQAAAAEAA8AAAADAAIAAAAEABAAAAABAAQAAAAFAA8AAAAEAAIAAAAFABAAAAABAAQAAAAGAA8AAAADAAIAAAAGABAAAAABAAQAAAAHAA8AAAAEAAIAAAAHABAAAAABAAQAAAAIAA8AAAADAAIAAAAIABAAAAABAAQAAAAJAA8AAAAEAAIAAAAJABAAAAABAAQAAAAKAA8AAAADAAIAAAAKABAAAAABAAQAAAALAA8AAAAEAAIAAAALABAAAAABAAQAAAAMAA8AAAADAAIAAAAMABAAAAABAAQAAAANAA8AAAAEAAIAAAANABAAAAABAAQAAAAOAA8AAAADAAIAAAAOABAAAAABAAQAAAAPAA8AAAAEAAIAAAAPABAAAAABAAQAAAAQAA8AAAADAAIAAAAQABAAAAABAAQAAAARAA8AAAAEAAIAAAARABAAAAABAAQAAAASAA8AAAADAAIAAAASABAAAAABAAQAAAATAA8AAAAEAAIAAAATABAAAAABAAQAAAAUAA8AAAADAAIAAAAUABAAAAABAAQAAAAVAA8AAAAEAAIAAAAVABAAAAABAAQAAAAWAA8AAAADAAIAAAAWABAAAAABAAQAAAAXAA8AAAAEAAIAAAAXABAAAAABAAQAAAAYAA8AAAADAAIAAAAYABAAAAABAAQAAAAZAA8AAAAEAAIAAAAZABAAAAABAAQAAAAaAA8AAAADAAIAAAAaABAAAAABAAQAAAAbAA8AAAAEAAIAAAAbABAAAAABAAQAAAAcAA8AAAADAAIAAAAcABAAAAABAAQAAAAdAA8AAAAEAAIAAAAdABAAAAABAAQAAAAAAAAAAAABAAIAAAABAAAAAAACAAIAAAAcAAAAAAABAAIAAAAdAAAAAAACAAIAAAAAAAEAAAABAAMAAAABAAEAAAACAAMAAAAcAAEAAAABAAMAAAAdAAEAAAACAAMAAAAAAAIAAAABAAIAAAABAAIAAAACAAIAAAAcAAIAAAABAAIAAAAdAAIAAAACAAIAAAAAAAMAAAABAAMAAAABAAMAAAACAAMAAAAcAAMAAAABAAMAAAAdAAMAAAACAAMAAAAAAAQAAAABAAIAAAABAAQAAAACAAIAAAAcAAQAAAABAAIAAAAdAAQAAAACAAIAAAAAAAUAAAABAAMAAAABAAUAAAACAAMAAAAcAAUAAAABAAMAAAAdAAUAAAACAAMAAAAAAAYAAAABAAIAAAABAAYAAAACAAIAAAAcAAYAAAABAAIAAAAdAAYAAAACAAIAAAAAAAcAAAABAAMAAAABAAcAAAACAAMAAAAcAAcAAAABAAMAAAAdAAcAAAACAAMAAAAAAAgAAAABAAIAAAABAAgAAAACAAIAAAAcAAgAAAABAAIAAAAdAAgAAAACAAIAAAAAAAkAAAABAAMAAAABAAkAAAACAAMAAAAcAAkAAAABAAMAAAAdAAkAAAACAAMAAAAAAAoAAAABAAIAAAABAAoAAAACAAIAAAAcAAoAAAABAAIAAAAdAAoAAAACAAIAAAAAAAsAAAABAAMAAAABAAsAAAACAAMAAAAcAAsAAAABAAMAAAAdAAsAAAACAAMAAAAAAAwAAAABAAIAAAABAAwAAAACAAIAAAAcAAwAAAABAAIAAAAdAAwAAAACAAIAAAAAAA0AAAABAAMAAAABAA0AAAACAAMAAAAcAA0AAAABAAMAAAAdAA0AAAACAAMAAAAAAA4AAAABAAIAAAABAA4AAAACAAIAAAAcAA4AAAABAAIAAAAdAA4AAAACAAIAAAAIAAwAAAADAAIAAAAJAAwAAAAEAAIAAAAKAAwAAAADAAIAAAALAAwAAAAEAAIAAAAMAAwAAAADAAIAAAAQAAkAAAADAAIAAAARAAkAAAAEAAIAAAASAAkAAAADAAIAAAATAAkAAAAEAAIAAAAUAAkAAAADAAIAAAAYAA0AAAABAAMAAAAZAA0AAAACAAMAAAAYAA4AAAABAAIAAAAZAA4AAAACAAIAAAA=")
+tile_set = ExtResource("4_asmw1")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="LeftWall"]
-shape = SubResource("RectangleShape2D_LeftWall")
-
-[node name="ColorRect" type="ColorRect" parent="LeftWall"]
-offset_left = -8.0
-offset_top = -123.0
-offset_right = 8.0
-offset_bottom = 123.0
-mouse_filter = 2
-color = Color(0.2, 0.24, 0.34, 1)
-
-[node name="RightWall" type="StaticBody2D" parent="."]
-position = Vector2(472, 123)
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="RightWall"]
-shape = SubResource("RectangleShape2D_RightWall")
-
-[node name="ColorRect" type="ColorRect" parent="RightWall"]
-offset_left = -8.0
-offset_top = -123.0
-offset_right = 8.0
-offset_bottom = 123.0
-mouse_filter = 2
-color = Color(0.2, 0.24, 0.34, 1)
-
-[node name="LowPlatform" type="StaticBody2D" parent="."]
-position = Vector2(170, 206)
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="LowPlatform"]
-shape = SubResource("RectangleShape2D_LowPlatform")
-
-[node name="ColorRect" type="ColorRect" parent="LowPlatform"]
-offset_left = -40.0
-offset_top = -6.0
-offset_right = 40.0
-offset_bottom = 6.0
-mouse_filter = 2
-color = Color(0.2, 0.24, 0.34, 1)
-
-[node name="HighPlatform" type="StaticBody2D" parent="."]
-position = Vector2(300, 166)
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="HighPlatform"]
-shape = SubResource("RectangleShape2D_HighPlatform")
-
-[node name="ColorRect" type="ColorRect" parent="HighPlatform"]
-offset_left = -40.0
-offset_top = -6.0
-offset_right = 40.0
-offset_bottom = 6.0
-mouse_filter = 2
-color = Color(0.2, 0.24, 0.34, 1)
-
-[node name="Step" type="StaticBody2D" parent="."]
-position = Vector2(420, 226)
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Step"]
-shape = SubResource("RectangleShape2D_Step")
-
-[node name="ColorRect" type="ColorRect" parent="Step"]
-offset_left = -32.0
-offset_top = -20.0
-offset_right = 32.0
-offset_bottom = 20.0
-mouse_filter = 2
-color = Color(0.2, 0.24, 0.34, 1)
-
-[node name="Gigi" parent="." instance=ExtResource("2_sister")]
+[node name="Gigi" parent="." unique_id=2109402592 instance=ExtResource("2_sister")]
 position = Vector2(80, 220)
 signature_color = Color(0.2, 0.95, 1, 1)
