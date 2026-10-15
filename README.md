@@ -108,4 +108,15 @@ Prototype controls (player 1, keyboard): move **A/D** or **arrows**, jump **Spac
 
 Movement feel is tuned through `@export` values on the `Sister` node (Inspector panel): run speed, jump height, time to apex, coyote time, jump buffer, max shots.
 
+## Running tests
+
+Headless tests live in `tests/`. From the project folder:
+
+```
+godot --headless --import --path .
+godot --headless --path . -s res://tests/run_tests.gd
+```
+
+The first command imports the project (needed once after cloning or adding files). The runner executes every `test_*` method in `tests/test_*.gd` and exits with code 1 if any check fails. Shared helpers (`TestContext`: checks, rooms, fake keyboard and controller input) are in `tests/support/`. On Windows, `godot` is the `*_console.exe` build.
+
 `project.godot` already sets the pixel-art defaults: 480×270 viewport, `viewport` stretch mode with integer scaling, nearest-neighbor texture filtering, 2D pixel snapping, and HDR 2D on the Forward+ renderer. Change them only in Project Settings, not by hand-editing the file.
