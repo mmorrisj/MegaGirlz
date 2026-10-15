@@ -97,7 +97,8 @@ CREDITS.md
 
 ## Getting started
 
-1. Install Godot 4.x (stable).
+1. Install Godot 4.7 or newer (stable, standard build, not .NET).
 2. Clone the repo and open `project.godot` in Godot.
-3. Import pixel art with nearest-neighbor filtering (Project Settings > Rendering > Textures > Default Texture Filter = Nearest).
-4. Set the viewport to 480×270 with stretch mode `viewport` and integer scaling (Project Settings > Display > Window).
+3. Press F5 to run. `scenes/main.tscn` is the entry scene.
+
+`project.godot` already sets the pixel-art defaults: 480×270 viewport, `viewport` stretch mode with integer scaling, nearest-neighbor texture filtering, 2D pixel snapping, and HDR 2D on the Forward+ renderer. Change them only in Project Settings, not by hand-editing the file.
