@@ -29,6 +29,10 @@ enum AttackKind { GROUND, AIR, THROW }
 ## Optional art drawn over the shared sprite to give this sister her own look
 ## (e.g. Evie's bangs). Must mirror the base sprite's animations and frames.
 @export var hairstyle_frames: SpriteFrames
+## Optional replacement for the shared sprite, for changes an overlay can't
+## make because they remove pixels (e.g. Gigi's braid). Same palette as the
+## base, so recoloring still works. Must mirror the base animations and frames.
+@export var body_frames: SpriteFrames
 ## Sword: ground slash and overhead air slash. Shuriken: thrown stars, on the
 ## ground or in the air.
 @export var weapon: Weapon = Weapon.SWORD
@@ -99,6 +103,8 @@ func _ready() -> void:
 	_apply_palette()
 	_swap_beam.set_color(signature_color)
 	_slash_arc.set_color(signature_color)
+	if body_frames:
+		_sprite.sprite_frames = body_frames
 	_hairstyle.sprite_frames = hairstyle_frames
 	_hairstyle.visible = hairstyle_frames != null
 	_hairstyle.sync()
