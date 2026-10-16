@@ -12,8 +12,11 @@ const SILHOUETTE_SHADER: Shader = preload("res://assets/vfx/silhouette.gdshader"
 @export var cooldown: float = 0.25
 @export var afterimage_interval: float = 0.03
 @export var afterimage_fade: float = 0.2
-## Above 1.0 so afterimages glow once HDR glow is enabled.
-@export var afterimage_brightness: float = 1.5
+## Above 1.0 so afterimages glow with HDR glow.
+@export var afterimage_brightness: float = 1.9
+## How much brighter she is while dashing (1.0 = unchanged). Kept neutral:
+## tinting her in her color shifts her hair and skin to odd hues.
+@export var dash_glow: float = 1.1
 
 var _dash_left: float = 0.0
 var _cooldown_left: float = 0.0
@@ -42,6 +45,9 @@ func process_movement(delta: float) -> bool:
 			cancel()
 			return false
 		_dash_left -= delta
+		if _dash_left <= 0.0:
+			cancel()
+			return false
 		body.velocity = Vector2(body.facing * dash_speed, 0.0)
 		_afterimage_timer -= delta
 		if _afterimage_timer <= 0.0:
@@ -56,6 +62,7 @@ func process_movement(delta: float) -> bool:
 	_dash_left = dash_time
 	_cooldown_left = dash_time + cooldown
 	body.velocity = Vector2(body.facing * dash_speed, 0.0)
+	_set_glowing(true)
 	_spawn_afterimage()
 	return true
 
@@ -66,6 +73,12 @@ func get_animation_override() -> StringName:
 
 func cancel() -> void:
 	_dash_left = 0.0
+	_set_glowing(false)
+
+
+func _set_glowing(glowing: bool) -> void:
+	var glow := Color(dash_glow, dash_glow, dash_glow)
+	body.get_sprite().self_modulate = glow if glowing else Color.WHITE
 
 
 func _spawn_afterimage() -> void:
@@ -76,7 +89,7 @@ func _spawn_afterimage() -> void:
 	ghost.material = _afterimage_material
 	var color: Color = body.signature_color
 	var b: float = afterimage_brightness
-	ghost.modulate = Color(color.r * b, color.g * b, color.b * b, 0.6)
+	ghost.modulate = Color(color.r * b, color.g * b, color.b * b, 0.7)
 	# Added to the level so the trail stays where she was, just before her in
 	# the tree so it draws behind her but in front of the level art.
 	body.get_parent().add_child(ghost)
