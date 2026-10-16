@@ -133,13 +133,21 @@ region = Rect2(896, 0, 128, 96)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_epvtd"]
 atlas = ExtResource("1_r0jh7")
-region = Rect2(256, 0, 128, 96)
+region = Rect2(896, 0, 128, 96)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_1asvu"]
 atlas = ExtResource("1_r0jh7")
 region = Rect2(384, 0, 128, 96)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_tumpb"]
+atlas = ExtResource("1_r0jh7")
+region = Rect2(256, 0, 128, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pmapd"]
+atlas = ExtResource("1_r0jh7")
+region = Rect2(384, 0, 128, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_821r4"]
 atlas = ExtResource("1_r0jh7")
 region = Rect2(384, 0, 128, 96)
 
@@ -284,9 +292,20 @@ animations = [{
 }, {
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_1asvu")
+}],
+"loop": 0,
+"name": &"smash",
+"speed": 12.0
 }, {
+"frames": [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_tumpb")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pmapd")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_821r4")
 }],
 "loop": 0,
 "name": &"throw",

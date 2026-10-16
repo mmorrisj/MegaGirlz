@@ -241,6 +241,8 @@ func _handle_jump() -> void:
 func _handle_attack() -> void:
 	if not input.is_attack_just_pressed() or is_attacking():
 		return
+	if _ability and _ability.try_attack():
+		return
 	if weapon == Weapon.SHURIKEN:
 		if not _thrower.can_throw():
 			return

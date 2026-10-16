@@ -1,0 +1,22 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://scripts/vfx/shockwave.gd" id="1_shockwave"]
+
+[sub_resource type="Gradient" id="Gradient_light"]
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_light"]
+gradient = SubResource("Gradient_light")
+width = 64
+height = 64
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(1, 0.5)
+
+[node name="Shockwave" type="Node2D"]
+script = ExtResource("1_shockwave")
+
+[node name="Light" type="PointLight2D" parent="."]
+energy = 2.5
+texture = SubResource("GradientTexture2D_light")
+texture_scale = 3.0
