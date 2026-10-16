@@ -16,6 +16,7 @@
 [ext_resource type="Environment" path="res://assets/vfx/glow_environment.tres" id="23_glow"]
 [ext_resource type="Script" path="res://scripts/components/abilities/slide_ability.gd" id="24_slide"]
 [ext_resource type="SpriteFrames" path="res://assets/characters/gigi/gigi_frames.tres" id="25_gigi_frames"]
+[ext_resource type="SpriteFrames" path="res://assets/characters/evie/evie_frames.tres" id="26_evie_frames"]
 
 [node name="MagicCliffs" type="Node2D" unique_id=1520894589 node_paths=PackedStringArray("party", "spawn_point")]
 script = ExtResource("1_88ina")
@@ -82,6 +83,7 @@ signature_color = Color(1, 0.3, 0.8, 1)
 hair_color = Color(0.6, 0.38, 0.2, 1)
 hairstyle_frames = ExtResource("20_bangs")
 weapon = 1
+body_frames = ExtResource("26_evie_frames")
 
 [node name="Lucy" parent="." unique_id=557405691 instance=ExtResource("7_udx6v")]
 position = Vector2(45, 140)

@@ -89,15 +89,15 @@ func test_each_sister_has_her_own_palette(ctx: TestContext) -> void:
 		"Each sister should get a distinct main color, got %s" % [colors])
 
 
-func test_gigi_has_her_own_hair_frames(ctx: TestContext) -> void:
+func test_gigi_and_evie_have_their_own_frames(ctx: TestContext) -> void:
 	var room: Node = ctx.load_room()
 	await ctx.physics_frames(2)
-	var gigi: AnimatedSprite2D = room.get_node("Gigi/SquashPivot/Visual/Sprite")
-	var evie: AnimatedSprite2D = room.get_node("Evie/SquashPivot/Visual/Sprite")
-	ctx.check(gigi.sprite_frames != evie.sprite_frames, "Gigi should use her own (braid-free) frames")
-	var base: SpriteFrames = evie.sprite_frames
-	var ok: bool = true
-	for anim in base.get_animation_names():
-		ok = ok and gigi.sprite_frames.has_animation(anim) \
-			and gigi.sprite_frames.get_frame_count(anim) == base.get_frame_count(anim)
-	ctx.check(ok, "Gigi's frames should mirror every base animation and frame")
+	var lucy: AnimatedSprite2D = room.get_node("Lucy/SquashPivot/Visual/Sprite")
+	var base: SpriteFrames = lucy.sprite_frames
+	for sister_name in ["Gigi", "Evie"]:
+		var sprite: AnimatedSprite2D = room.get_node("%s/SquashPivot/Visual/Sprite" % sister_name)
+		ctx.check(sprite.sprite_frames != base, "%s should use her own frames" % sister_name)
+		var ok: bool = true
+		for anim in base.get_animation_names():
+			ok = ok and sprite.sprite_frames.has_animation(anim) 				and sprite.sprite_frames.get_frame_count(anim) == base.get_frame_count(anim)
+		ctx.check(ok, "%s's frames should mirror every base animation and frame" % sister_name)
