@@ -91,16 +91,12 @@ func test_lucy_double_jumps_once_and_refills_on_landing(ctx: TestContext) -> voi
 	ctx.check(lucy.velocity.y < 0.0, "The air jump should refill after landing")
 
 
-func test_evie_has_no_dash_or_double_jump(ctx: TestContext) -> void:
+func test_evie_has_no_double_jump(ctx: TestContext) -> void:
 	var room: Node = ctx.load_room()
 	var evie: Sister = room.get_node("Evie")
 	await ctx.physics_frames(30)
 	await ctx.tap_key(KEY_E)
 	await ctx.physics_frames(15)
-	var start_x: float = evie.global_position.x
-	await ctx.tap_key(KEY_L)
-	await ctx.physics_frames(8)
-	ctx.check(absf(evie.global_position.x - start_x) < 1.0, "The ability button should do nothing for Evie")
 	await ctx.tap_key(KEY_SPACE, 20)
 	await ctx.physics_frames(4)
 	await ctx.tap_key(KEY_SPACE)

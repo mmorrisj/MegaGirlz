@@ -147,6 +147,10 @@ func get_sprite() -> AnimatedSprite2D:
 	return _sprite
 
 
+func get_collision_shape() -> CollisionShape2D:
+	return _collision
+
+
 ## Animation the ability wants shown instead of movement (e.g. the dash pose),
 ## or empty.
 func get_ability_animation() -> StringName:
