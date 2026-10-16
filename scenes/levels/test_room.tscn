@@ -10,6 +10,8 @@
 [ext_resource type="Script" path="res://scripts/components/abilities/double_jump_ability.gd" id="22_double_jump"]
 [ext_resource type="Environment" path="res://assets/vfx/glow_environment.tres" id="23_glow"]
 [ext_resource type="Script" path="res://scripts/components/abilities/slide_ability.gd" id="24_slide"]
+[ext_resource type="SpriteFrames" path="res://assets/characters/gigi/gigi_frames.tres" id="25_gigi_frames"]
+[ext_resource type="SpriteFrames" path="res://assets/characters/evie/evie_frames.tres" id="26_evie_frames"]
 
 [node name="TestRoom" type="Node2D" unique_id=1247231533]
 
@@ -40,6 +42,7 @@ tile_set = ExtResource("4_asmw1")
 position = Vector2(80, 220)
 signature_color = Color(0.2, 0.95, 1, 1)
 hair_color = Color(1, 0.8, 0.35, 1)
+body_frames = ExtResource("25_gigi_frames")
 
 [node name="Dash" type="Node" parent="Gigi" unique_id=1650628175]
 script = ExtResource("21_dash")
@@ -50,6 +53,7 @@ signature_color = Color(1, 0.3, 0.8, 1)
 hair_color = Color(0.6, 0.38, 0.2, 1)
 hairstyle_frames = ExtResource("20_bangs")
 weapon = 1
+body_frames = ExtResource("26_evie_frames")
 
 [node name="Slide" type="Node" parent="Evie" unique_id=37754573]
 script = ExtResource("24_slide")
