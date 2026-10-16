@@ -24,6 +24,12 @@ func try_air_jump() -> bool:
 	return false
 
 
+## Called when attack is pressed. Return true if the ability handled it; the
+## sister then does no normal attack (e.g. Lucy's smash).
+func try_attack() -> bool:
+	return false
+
+
 ## Animation to show instead of the movement animation, or empty for none.
 func get_animation_override() -> StringName:
 	return &""

@@ -13,6 +13,8 @@
 [ext_resource type="SpriteFrames" path="res://assets/characters/evie/evie_bangs_frames.tres" id="20_bangs"]
 [ext_resource type="Script" path="res://scripts/components/abilities/dash_ability.gd" id="21_dash"]
 [ext_resource type="Script" path="res://scripts/components/abilities/double_jump_ability.gd" id="22_double_jump"]
+[ext_resource type="Environment" path="res://assets/vfx/glow_environment.tres" id="23_glow"]
+[ext_resource type="Script" path="res://scripts/components/abilities/slide_ability.gd" id="24_slide"]
 
 [node name="MagicCliffs" type="Node2D" unique_id=1520894589 node_paths=PackedStringArray("party", "spawn_point")]
 script = ExtResource("1_88ina")
@@ -104,5 +106,11 @@ party = NodePath("../Party")
 [node name="Dash" type="Node" parent="Gigi"]
 script = ExtResource("21_dash")
 
+[node name="Slide" type="Node" parent="Evie"]
+script = ExtResource("24_slide")
+
 [node name="DoubleJump" type="Node" parent="Lucy"]
 script = ExtResource("22_double_jump")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = ExtResource("23_glow")

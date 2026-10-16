@@ -9,6 +9,8 @@ const SHURIKEN_SCENE: PackedScene = preload("res://scenes/projectiles/shuriken.t
 ## so they keep flying if she is swapped out.
 @export var body: Node2D
 @export var max_in_flight: int = 3
+## How bright the star is tinted in the thrower's color; above 1.0 it glows.
+@export var star_glow: float = 1.4
 
 var _in_flight: int = 0
 
@@ -20,6 +22,9 @@ func can_throw() -> bool:
 func throw(direction: int) -> void:
 	var star: Projectile = SHURIKEN_SCENE.instantiate()
 	star.direction = direction
+	var color: Color = (body as Sister).signature_color if body is Sister else Color.WHITE
+	star.modulate = Color(color.r * star_glow, color.g * star_glow, color.b * star_glow)
+	(star.get_node("Light") as PointLight2D).color = color
 	body.get_parent().add_child(star)
 	star.global_position = global_position
 	_in_flight += 1

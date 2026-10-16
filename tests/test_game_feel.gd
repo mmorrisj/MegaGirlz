@@ -73,3 +73,49 @@ func test_sparks_start_where_they_are_placed(ctx: TestContext) -> void:
 	spark.global_position = Vector2(240, 120)
 	await ctx.physics_frames(1)
 	ctx.check(is_instance_valid(spark) and spark.emitting, "The spark should start emitting once positioned")
+
+
+func test_levels_have_hdr_glow(ctx: TestContext) -> void:
+	for path in ["res://scenes/levels/test_room.tscn", "res://scenes/levels/magic_cliffs.tscn"]:
+		var level: Node = load(path).instantiate()
+		var env_node: WorldEnvironment = level.get_node_or_null("WorldEnvironment")
+		ctx.check(env_node != null and env_node.environment.glow_enabled, "%s should have HDR glow" % path.get_file())
+		if env_node:
+			ctx.check(env_node.environment.background_mode == Environment.BG_CANVAS,
+				"%s glow should use the canvas background mode" % path.get_file())
+		level.free()
+	ctx.check(ProjectSettings.get_setting("rendering/viewport/hdr_2d"), "HDR 2D must stay on for glow")
+	await ctx.physics_frames(1)
+
+
+func test_shuriken_glow_in_the_throwers_color(ctx: TestContext) -> void:
+	var room: Node = ctx.load_room()
+	await ctx.physics_frames(30)
+	await ctx.tap_key(KEY_E)
+	await ctx.physics_frames(15)
+	var evie: Sister = room.get_node("Evie")
+	await ctx.tap_key(KEY_X)
+	var star: Projectile = null
+	for child in room.get_children():
+		if child is Projectile:
+			star = child
+	ctx.check(star != null, "Evie should throw a star")
+	if star == null:
+		return
+	var light: PointLight2D = star.get_node("Light")
+	ctx.check(light.color.is_equal_approx(evie.signature_color), "The star's light should be Evie's color")
+	ctx.check(star.modulate.r > 1.0 or star.modulate.g > 1.0 or star.modulate.b > 1.0, "The star should be bright enough to glow")
+
+
+func test_slash_glow_layer_follows_the_body_and_skips_the_hurt_frame(ctx: TestContext) -> void:
+	var gigi: Sister = ctx.load_room().get_node("Gigi")
+	var sprite: AnimatedSprite2D = gigi.get_node("SquashPivot/Visual/Sprite")
+	var glow: SpriteOverlay = gigi.get_node("SquashPivot/Visual/SlashGlow")
+	ctx.check(glow.self_modulate.r > 1.0, "The slash layer should be bright enough to glow")
+	await ctx.physics_frames(30)
+	await ctx.tap_key(KEY_X)
+	await ctx.physics_frames(15)
+	ctx.check(glow.animation == sprite.animation and glow.frame == sprite.frame, "The slash layer should match the body frame")
+	# The hurt frame has white teeth in the slash color: the layer must be empty there.
+	var hurt: Texture2D = glow.sprite_frames.get_frame_texture(&"hurt", 0)
+	ctx.check(hurt.get_image().is_invisible(), "The slash layer should have nothing in the hurt frame")

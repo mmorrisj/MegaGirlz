@@ -9,8 +9,8 @@ The sisters fight through a series of stages to recover something lost (story TB
 | Sister | Ability | Signature color (placeholder) |
 |---|---|---|
 | Gigi | Sword; dash (ability button) | Cyan |
-| Evie | Shuriken (ranged); ability TBD | Magenta |
-| Lucy | Sword; double jump | Amber |
+| Evie | Shuriken (ranged); slide (ability button) | Magenta |
+| Lucy | Sword; double jump, then attack for a smash (plunge + shockwave) | Amber |
 
 Abilities are not designed yet. They will be tuned to fit each sister's personality. Each sister has her own palette and an emissive element (core, visor, or arm cannon) in her signature color, so the player always knows who is on stage. The prototype uses one base sprite (the Magic Cliffs heroine) recolored per sister: outfit and sword slash in her signature color, plus her own hair color. Distinct hairstyles per sister are a planned art pass.
 
@@ -49,7 +49,7 @@ Abilities are not designed yet. They will be tuned to fit each sister's personal
 3. Sister swapping: three sisters, instant swap with a beam flash, per-sister palettes.
 4. Controller support for the single player (auto-detect the first connected controller).
 5. Camera: horizontal scrolling sections (done in the Magic Cliffs stage) and fixed-screen rooms with transitions.
-6. Visual pass: HDR glow, one dynamic light, parallax background.
+6. Visual pass: HDR glow, one dynamic light, parallax background. (Done: glow on slashes, beams, afterimages, sparks, and shuriken, which also carry a light. Desktop only; the web build has no glow.)
 7. One enemy type (with hit flash and hit-stop) and each sister's signature ability.
 
 ### Later
@@ -105,7 +105,7 @@ CREDITS.md
 2. Clone the repo and open `project.godot` in Godot.
 3. Press F5 to run. The entry scene is `scenes/levels/magic_cliffs.tscn`, a horizontal scrolling stage with parallax layers. `scenes/levels/test_room.tscn` is a single-screen room for testing mechanics (open it and press F6).
 
-Prototype controls (keyboard): move **A/D** or **arrows**, jump **Space/K/Z** (hold for a higher jump), attack **J/X** (Gigi and Lucy: sword slash, overhead slash in the air; Evie: throws shuriken, up to 3 in flight), ability **Shift/L** (Gigi: dash, once per jump in the air; Lucy's double jump is a second jump press in mid-air), swap sister **E/O** (next) and **Q/U** (previous). Controller bindings: A jump, X attack, B ability, RB/LB swap.
+Prototype controls (keyboard): move **A/D** or **arrows**, jump **Space/K/Z** (hold for a higher jump), attack **J/X** (Gigi and Lucy: sword slash, overhead slash in the air; Evie: throws shuriken, up to 3 in flight), ability **Shift/L** (Gigi: dash, once per jump in the air; Evie: slide, low and under gaps; Lucy's double jump is a second jump press in mid-air, and attacking after it smashes down), swap sister **E/O** (next) and **Q/U** (previous). Controller bindings: A jump, X attack, B ability, RB/LB swap.
 
 Movement feel is tuned through `@export` values on the `Sister` node (Inspector panel): run speed, jump height, time to apex, coyote time, jump buffer, max shots.
 

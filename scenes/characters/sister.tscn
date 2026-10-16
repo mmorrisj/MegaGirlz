@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3]
+[gd_scene load_steps=16 format=3]
 
 [ext_resource type="Script" path="res://scripts/characters/sister.gd" id="1_sister"]
 [ext_resource type="Script" path="res://scripts/components/squash_stretch.gd" id="2_squash"]
@@ -9,6 +9,7 @@
 [ext_resource type="Script" path="res://scripts/components/slash_arc.gd" id="8_arc"]
 [ext_resource type="Script" path="res://scripts/components/sprite_overlay.gd" id="9_overlay"]
 [ext_resource type="Script" path="res://scripts/components/shuriken_thrower.gd" id="10_thrower"]
+[ext_resource type="SpriteFrames" path="res://assets/characters/sister_base/slash_glow_frames.tres" id="11_slash_glow"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_palette"]
 resource_local_to_scene = true
@@ -42,6 +43,13 @@ position = Vector2(0, -28)
 material = SubResource("ShaderMaterial_palette")
 sprite_frames = ExtResource("5_frames")
 animation = &"idle"
+
+[node name="SlashGlow" type="AnimatedSprite2D" parent="SquashPivot/Visual" node_paths=PackedStringArray("source")]
+self_modulate = Color(1.55, 1.55, 1.55, 1)
+position = Vector2(0, -28)
+sprite_frames = ExtResource("11_slash_glow")
+script = ExtResource("9_overlay")
+source = NodePath("../Sprite")
 
 [node name="Hairstyle" type="AnimatedSprite2D" parent="SquashPivot/Visual" node_paths=PackedStringArray("source")]
 visible = false

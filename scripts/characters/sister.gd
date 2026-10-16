@@ -147,6 +147,10 @@ func get_sprite() -> AnimatedSprite2D:
 	return _sprite
 
 
+func get_collision_shape() -> CollisionShape2D:
+	return _collision
+
+
 ## Animation the ability wants shown instead of movement (e.g. the dash pose),
 ## or empty.
 func get_ability_animation() -> StringName:
@@ -240,6 +244,8 @@ func _handle_jump() -> void:
 
 func _handle_attack() -> void:
 	if not input.is_attack_just_pressed() or is_attacking():
+		return
+	if _ability and _ability.try_attack():
 		return
 	if weapon == Weapon.SHURIKEN:
 		if not _thrower.can_throw():
