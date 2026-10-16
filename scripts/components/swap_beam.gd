@@ -6,8 +6,10 @@ extends Node2D
 @export var sprite: CanvasItem
 @export var beam: ColorRect
 @export var duration: float = 0.18
+## Sprite brightness at the start of the flash; keep it modest, glow amplifies it.
+@export var flash_brightness: float = 1.6
 ## Above 1.0 so the beam glows once HDR glow is enabled.
-@export var brightness: float = 2.5
+@export var brightness: float = 1.3
 
 var _tween: Tween
 
@@ -25,7 +27,7 @@ func play() -> void:
 		_tween.kill()
 	visible = true
 	scale = Vector2.ONE
-	sprite.self_modulate = Color(3.0, 3.0, 3.0)
+	sprite.self_modulate = Color(flash_brightness, flash_brightness, flash_brightness)
 	_tween = create_tween().set_parallel()
 	_tween.tween_property(self, "scale:x", 0.0, duration).set_ease(Tween.EASE_IN)
 	_tween.tween_property(sprite, "self_modulate", Color.WHITE, duration)

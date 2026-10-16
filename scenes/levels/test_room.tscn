@@ -8,6 +8,7 @@
 [ext_resource type="SpriteFrames" path="res://assets/characters/evie/evie_bangs_frames.tres" id="20_bangs"]
 [ext_resource type="Script" path="res://scripts/components/abilities/dash_ability.gd" id="21_dash"]
 [ext_resource type="Script" path="res://scripts/components/abilities/double_jump_ability.gd" id="22_double_jump"]
+[ext_resource type="Environment" path="res://assets/vfx/glow_environment.tres" id="23_glow"]
 
 [node name="TestRoom" type="Node2D" unique_id=1247231533]
 
@@ -60,3 +61,6 @@ script = ExtResource("21_dash")
 
 [node name="DoubleJump" type="Node" parent="Lucy"]
 script = ExtResource("22_double_jump")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = ExtResource("23_glow")

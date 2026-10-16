@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3]
+[gd_scene load_steps=9 format=3]
 
 [ext_resource type="Script" path="res://scripts/projectiles/projectile.gd" id="1_projectile"]
 [ext_resource type="Texture2D" path="res://assets/projectiles/shuriken.png" id="2_star"]
@@ -25,6 +25,17 @@ animations = [{
 "speed": 16.0
 }]
 
+[sub_resource type="Gradient" id="Gradient_light"]
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_light"]
+gradient = SubResource("Gradient_light")
+width = 64
+height = 64
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(1, 0.5)
+
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_star"]
 size = Vector2(10, 10)
 
@@ -42,6 +53,10 @@ shape = SubResource("RectangleShape2D_star")
 sprite_frames = SubResource("SpriteFrames_spin")
 animation = &"spin"
 autoplay = "spin"
+
+[node name="Light" type="PointLight2D" parent="."]
+energy = 0.8
+texture = SubResource("GradientTexture2D_light")
 
 [node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="."]
 rect = Rect2(-8, -8, 16, 16)

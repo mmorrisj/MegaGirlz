@@ -26,6 +26,8 @@ enum AttackKind { GROUND, AIR, THROW }
 ## Lightest hair shade; darker shades are derived from it. The boots share
 ## the hair colors in the base sprite.
 @export var hair_color: Color = Color(1.0, 0.663, 0.224)
+## Brightness of her colored sword slash; above 1.0 it glows.
+@export var slash_glow: float = 2.6
 ## Optional art drawn over the shared sprite to give this sister her own look
 ## (e.g. Evie's bangs). Must mirror the base sprite's animations and frames.
 @export var hairstyle_frames: SpriteFrames
@@ -183,6 +185,7 @@ func _apply_palette() -> void:
 	palette.set_shader_parameter(&"target_hair_mid", hair_color.darkened(0.3))
 	palette.set_shader_parameter(&"target_hair_dark", hair_color.darkened(0.55))
 	palette.set_shader_parameter(&"target_slash", signature_color.lightened(0.45))
+	palette.set_shader_parameter(&"slash_glow", slash_glow)
 
 
 func _set_facing(direction: int) -> void:

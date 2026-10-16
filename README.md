@@ -49,7 +49,7 @@ Abilities are not designed yet. They will be tuned to fit each sister's personal
 3. Sister swapping: three sisters, instant swap with a beam flash, per-sister palettes.
 4. Controller support for the single player (auto-detect the first connected controller).
 5. Camera: horizontal scrolling sections (done in the Magic Cliffs stage) and fixed-screen rooms with transitions.
-6. Visual pass: HDR glow, one dynamic light, parallax background.
+6. Visual pass: HDR glow, one dynamic light, parallax background. (Done: glow on slashes, beams, afterimages, sparks, and shuriken, which also carry a light. Desktop only; the web build has no glow.)
 7. One enemy type (with hit flash and hit-stop) and each sister's signature ability.
 
 ### Later

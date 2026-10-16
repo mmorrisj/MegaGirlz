@@ -16,6 +16,8 @@ uniform vec4 target_hair : source_color = vec4(1.0, 0.663, 0.224, 1.0);
 uniform vec4 target_hair_mid : source_color = vec4(0.753, 0.459, 0.114, 1.0);
 uniform vec4 target_hair_dark : source_color = vec4(0.569, 0.345, 0.086, 1.0);
 uniform vec4 target_slash : source_color = vec4(0.612, 1.0, 0.992, 1.0);
+// Above 1.0 makes the slash arc bloom with HDR glow.
+uniform float slash_glow = 1.0;
 
 const float TOLERANCE = 0.02;
 
@@ -38,6 +40,8 @@ void fragment() {
 	rgb = swap(rgb, source_hair, target_hair);
 	rgb = swap(rgb, source_hair_mid, target_hair_mid);
 	rgb = swap(rgb, source_hair_dark, target_hair_dark);
-	rgb = swap(rgb, source_slash, target_slash);
+	if (distance(rgb, source_slash.rgb) < TOLERANCE) {
+		rgb = target_slash.rgb * slash_glow;
+	}
 	COLOR = vec4(rgb, color.a) * modulate;
 }
