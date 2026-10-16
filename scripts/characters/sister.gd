@@ -10,11 +10,13 @@ signal jumped
 ## fall_speed is the downward speed just before touching the ground.
 signal landed(fall_speed: float)
 signal shot_fired
+## Emitted when this sister takes over from another during a swap.
+signal swapped_in
 
 const BUSTER_SHOT_SCENE: PackedScene = preload("res://scenes/projectiles/buster_shot.tscn")
 
-## Emissive color that identifies this sister in co-op. Not shown by the
-## placeholder Mega Bot art; applied once sisters get their own palettes.
+## Identifies this sister: drives her sprite palette and swap beam, and
+## becomes her emissive color once real art exists.
 @export var signature_color: Color = Color.CYAN
 
 @export_group("Run")
@@ -50,6 +52,14 @@ var _is_rising_from_jump: bool = false
 var _live_shots: int = 0
 
 @onready var _visual: Node2D = $SquashPivot/Visual
+@onready var _sprite: AnimatedSprite2D = $SquashPivot/Visual/Sprite
+@onready var _collision: CollisionShape2D = $CollisionShape2D
+@onready var _swap_beam: SwapBeam = $SquashPivot/Visual/SwapBeam
+
+
+func _ready() -> void:
+	_apply_palette()
+	_swap_beam.set_color(signature_color)
 
 
 func _physics_process(delta: float) -> void:
@@ -66,6 +76,39 @@ func _physics_process(delta: float) -> void:
 	move_and_slide()
 	if is_on_floor() and not was_on_floor:
 		landed.emit(fall_speed)
+
+
+## Puts this sister on stage (visible, colliding, processing) or takes her off.
+func set_active(active: bool) -> void:
+	visible = active
+	process_mode = Node.PROCESS_MODE_INHERIT if active else Node.PROCESS_MODE_DISABLED
+	_collision.disabled = not active
+	if not active:
+		input = null
+
+
+## Steps in where `other` stands, keeping her motion so swaps work mid-jump.
+func take_over_from(other: Sister) -> void:
+	global_position = other.global_position
+	velocity = other.velocity
+	_set_facing(other.facing)
+	_is_rising_from_jump = other._is_rising_from_jump
+	_coyote_timer = other._coyote_timer
+	swapped_in.emit()
+
+
+func _apply_palette() -> void:
+	var palette := _sprite.material as ShaderMaterial
+	if palette == null:
+		return
+	palette.set_shader_parameter(&"target_main", signature_color)
+	palette.set_shader_parameter(&"target_shade", signature_color.darkened(0.45))
+	palette.set_shader_parameter(&"target_accent", signature_color.lightened(0.6))
+
+
+func _set_facing(direction: int) -> void:
+	facing = direction
+	_visual.scale.x = direction
 
 
 func _get_rise_gravity() -> float:
@@ -101,8 +144,7 @@ func _handle_run() -> void:
 	# Digital, Mega Man style: full speed or none, even on an analog stick.
 	velocity.x = signf(axis) * run_speed
 	if axis != 0.0:
-		facing = int(signf(axis))
-		_visual.scale.x = facing
+		_set_facing(int(signf(axis)))
 
 
 func _handle_jump() -> void:
@@ -124,9 +166,8 @@ func _handle_shoot() -> void:
 		return
 	var shot: BusterShot = BUSTER_SHOT_SCENE.instantiate()
 	shot.direction = facing
-	# top_level: the shot is our child (so we can count it) but moves on its own.
-	shot.top_level = true
-	add_child(shot)
+	# Added to the room, not to us, so it keeps flying if we are swapped out.
+	get_parent().add_child(shot)
 	shot.global_position = global_position + Vector2(muzzle_offset.x * facing, muzzle_offset.y)
 	_live_shots += 1
 	shot.tree_exited.connect(_on_shot_tree_exited)

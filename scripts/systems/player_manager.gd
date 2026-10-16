@@ -1,8 +1,8 @@
 extends Node
 ## Autoload that owns player slots: which input device drives which player.
 ##
-## For now only player 1 exists, on the keyboard. Controllers, extra players,
-## and drop-in/drop-out arrive in roadmap step 3.
+## Single player for now: player 1 on the keyboard. Controller support and
+## local co-op (extra players, drop-in/drop-out) come later.
 
 const MAX_PLAYERS: int = 3
 
