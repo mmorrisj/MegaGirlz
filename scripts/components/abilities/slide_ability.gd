@@ -13,8 +13,12 @@ const DUST_SCENE: PackedScene = preload("res://scenes/vfx/impact_spark.tscn")
 @export var cooldown: float = 0.15
 ## Fraction of her normal collision height while sliding.
 @export_range(0.2, 1.0) var crouch_height: float = 0.5
-@export var afterimage_brightness: float = 1.6
+## Above 1.0 so afterimages glow with HDR glow; matches Gigi's dash.
+@export var afterimage_brightness: float = 1.9
 @export var afterimage_interval: float = 0.05
+## How much brighter she is while sliding (1.0 = unchanged). Kept neutral:
+## tinting her in her color shifts her hair and skin to odd hues.
+@export var slide_glow: float = 1.1
 
 ## The slide pose sits higher in its frame than her standing feet do.
 const POSE_DROP: float = 12.0
@@ -115,6 +119,7 @@ func _start_slide() -> void:
 	collision.scale.y = crouch_height
 	collision.position.y = _standing_height * (1.0 - crouch_height) * 0.5
 	body.get_sprite().offset.y = POSE_DROP
+	body.get_sprite().self_modulate = Color(slide_glow, slide_glow, slide_glow)
 	_hitbox.monitoring = true
 	body.velocity = Vector2(body.facing * slide_speed, 10.0)
 	_spawn_dust()
@@ -126,6 +131,7 @@ func _end_slide() -> void:
 	collision.scale.y = 1.0
 	collision.position.y = 0.0
 	body.get_sprite().offset.y = 0.0
+	body.get_sprite().self_modulate = Color.WHITE
 	_hitbox.monitoring = false
 
 

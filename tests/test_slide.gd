@@ -21,6 +21,7 @@ func test_slide_is_fast_low_and_hits(ctx: TestContext) -> void:
 	ctx.check(sprite.animation == &"slide", "The slide pose should show, got %s" % sprite.animation)
 	ctx.check(collision.scale.y < 0.75, "Her collision should shrink while sliding")
 	ctx.check(slide.get_slide_hitbox().monitoring, "The slide should hit what's in front of her")
+	ctx.check(sprite.self_modulate.r > 1.0, "She should glow while sliding")
 	await ctx.physics_frames(8)
 	# 10 frames at slide speed is ~43 px; running would cover ~23 px.
 	ctx.check(evie.global_position.x - start_x > 35.0, "The slide should be faster than running (moved %.0f px)" % (evie.global_position.x - start_x))
@@ -30,6 +31,7 @@ func test_slide_is_fast_low_and_hits(ctx: TestContext) -> void:
 	ctx.check(is_equal_approx(collision.scale.y, 1.0) and is_zero_approx(collision.position.y), "Her collision should be restored")
 	ctx.check(not slide.get_slide_hitbox().monitoring, "The slide hitbox should switch off")
 	ctx.check(is_zero_approx(sprite.offset.y), "The sprite offset should be restored")
+	ctx.check(sprite.self_modulate == Color.WHITE, "Her slide glow should be cleared")
 
 
 func test_no_slide_in_the_air(ctx: TestContext) -> void:
