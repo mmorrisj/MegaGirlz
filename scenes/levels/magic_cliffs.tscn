@@ -11,6 +11,8 @@
 [ext_resource type="Script" path="res://scripts/systems/shake_camera.gd" id="9_v0nw6"]
 [ext_resource type="Script" path="res://scripts/systems/camera_follow.gd" id="10_cpk7y"]
 [ext_resource type="SpriteFrames" path="res://assets/characters/evie/evie_bangs_frames.tres" id="20_bangs"]
+[ext_resource type="Script" path="res://scripts/components/abilities/dash_ability.gd" id="21_dash"]
+[ext_resource type="Script" path="res://scripts/components/abilities/double_jump_ability.gd" id="22_double_jump"]
 
 [node name="MagicCliffs" type="Node2D" unique_id=1520894589 node_paths=PackedStringArray("party", "spawn_point")]
 script = ExtResource("1_88ina")
@@ -98,3 +100,9 @@ script = ExtResource("9_v0nw6")
 script = ExtResource("10_cpk7y")
 camera = NodePath("../Camera2D")
 party = NodePath("../Party")
+
+[node name="Dash" type="Node" parent="Gigi"]
+script = ExtResource("21_dash")
+
+[node name="DoubleJump" type="Node" parent="Lucy"]
+script = ExtResource("22_double_jump")

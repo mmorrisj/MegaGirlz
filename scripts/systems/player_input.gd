@@ -14,6 +14,7 @@ var _jump: StringName
 var _attack: StringName
 var _swap_next: StringName
 var _swap_prev: StringName
+var _ability: StringName
 
 
 func _init(index: int) -> void:
@@ -24,6 +25,7 @@ func _init(index: int) -> void:
 	_attack = InputBindings.action_name(index, InputBindings.ATTACK)
 	_swap_next = InputBindings.action_name(index, InputBindings.SWAP_NEXT)
 	_swap_prev = InputBindings.action_name(index, InputBindings.SWAP_PREV)
+	_ability = InputBindings.action_name(index, InputBindings.ABILITY)
 
 
 ## -1.0 (left) to 1.0 (right).
@@ -49,3 +51,7 @@ func is_swap_next_just_pressed() -> bool:
 
 func is_swap_prev_just_pressed() -> bool:
 	return Input.is_action_just_pressed(_swap_prev)
+
+
+func is_ability_just_pressed() -> bool:
+	return Input.is_action_just_pressed(_ability)

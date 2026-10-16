@@ -59,3 +59,17 @@ func test_shake_uses_whole_pixels(ctx: TestContext) -> void:
 
 func _has_sparks(node: Node) -> bool:
 	return node.get_children().any(func(child: Node) -> bool: return child is CPUParticles2D)
+
+
+func test_sparks_start_where_they_are_placed(ctx: TestContext) -> void:
+	# Spawners add a spark and then set its position. A one-shot burst that
+	# starts emitting on entering the tree is released at the origin instead,
+	# off-screen, so the spark must wait until the end of the frame.
+	var room: Node = ctx.load_room()
+	await ctx.physics_frames(2)
+	var spark: CPUParticles2D = load("res://scenes/vfx/impact_spark.tscn").instantiate()
+	room.add_child(spark)
+	ctx.check(not spark.emitting, "The spark should not emit before it is positioned")
+	spark.global_position = Vector2(240, 120)
+	await ctx.physics_frames(1)
+	ctx.check(is_instance_valid(spark) and spark.emitting, "The spark should start emitting once positioned")

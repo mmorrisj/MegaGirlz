@@ -2,8 +2,8 @@ class_name Sister
 extends CharacterBody2D
 ## A playable sister: run, jump, and fight with her weapon (sword or shuriken).
 ##
-## Shared by Gigi, Evie, and Lucy. Each sister's signature ability will be a
-## separate child component, not a subclass. Game-feel effects listen to
+## Shared by Gigi, Evie, and Lucy. Each sister's signature ability is a
+## SisterAbility child component (e.g. Gigi's dash), not a subclass. Game-feel effects listen to
 ## this node's signals instead of living in this script.
 
 signal jumped
@@ -81,6 +81,8 @@ var attack_kind: AttackKind = AttackKind.GROUND
 
 ## Seconds since the current slash started, or -1 when not attacking.
 var _attack_time: float = -1.0
+## This sister's signature ability, if she has one (a SisterAbility child).
+var _ability: SisterAbility = null
 
 @onready var _visual: Node2D = $SquashPivot/Visual
 @onready var _sprite: AnimatedSprite2D = $SquashPivot/Visual/Sprite
@@ -100,17 +102,23 @@ func _ready() -> void:
 	_hairstyle.sprite_frames = hairstyle_frames
 	_hairstyle.visible = hairstyle_frames != null
 	_hairstyle.sync()
+	for child in get_children():
+		if child is SisterAbility:
+			_ability = child
 
 
 func _physics_process(delta: float) -> void:
 	_update_timers(delta)
-	_apply_gravity(delta)
+	var ability_moving: bool = _ability != null and _ability.process_movement(delta)
+	if not ability_moving:
+		_apply_gravity(delta)
 	_update_attack(delta)
 	if input:
-		_handle_run()
-		_handle_jump()
+		if not ability_moving:
+			_handle_run()
+			_handle_jump()
 		_handle_attack()
-	else:
+	elif not ability_moving:
 		velocity.x = 0.0
 	var was_on_floor: bool = is_on_floor()
 	var fall_speed: float = velocity.y
@@ -127,10 +135,32 @@ func set_active(active: bool) -> void:
 	if not active:
 		input = null
 		_end_attack()
+		if _ability:
+			_ability.cancel()
 
 
 func is_attacking() -> bool:
 	return _attack_time >= 0.0
+
+
+func get_sprite() -> AnimatedSprite2D:
+	return _sprite
+
+
+## Animation the ability wants shown instead of movement (e.g. the dash pose),
+## or empty.
+func get_ability_animation() -> StringName:
+	return _ability.get_animation_override() if _ability else &""
+
+
+## Jumps straight up. height_scale 1.0 is a full jump; holding jump still
+## controls the height.
+func perform_jump(height_scale: float) -> void:
+	velocity.y = -_get_jump_velocity() * sqrt(height_scale)
+	_jump_buffer_timer = 0.0
+	_coyote_timer = 0.0
+	_is_rising_from_jump = true
+	jumped.emit()
 
 
 ## Steps in where `other` stands, keeping her motion so swaps work mid-jump.
@@ -200,11 +230,9 @@ func _handle_jump() -> void:
 	if input.is_jump_just_pressed():
 		_jump_buffer_timer = jump_buffer_time
 	if _jump_buffer_timer > 0.0 and _coyote_timer > 0.0:
-		velocity.y = -_get_jump_velocity()
-		_jump_buffer_timer = 0.0
-		_coyote_timer = 0.0
-		_is_rising_from_jump = true
-		jumped.emit()
+		perform_jump(1.0)
+	elif input.is_jump_just_pressed() and _ability and _ability.try_air_jump():
+		pass
 	elif _is_rising_from_jump and not input.is_jump_held():
 		velocity.y *= jump_cut_multiplier
 		_is_rising_from_jump = false

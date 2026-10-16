@@ -31,6 +31,10 @@ func _restart(animation: StringName) -> void:
 func _physics_process(_delta: float) -> void:
 	if body.is_attacking():
 		return
+	var ability_animation: StringName = body.get_ability_animation()
+	if not ability_animation.is_empty():
+		_play(ability_animation)
+		return
 	if not body.is_on_floor():
 		_play(&"jump" if body.velocity.y < 0.0 else &"fall")
 	elif not is_zero_approx(body.velocity.x):
