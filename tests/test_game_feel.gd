@@ -26,22 +26,17 @@ func test_jump_and_land_squash(ctx: TestContext) -> void:
 	ctx.check(pivot.scale.is_equal_approx(Vector2.ONE), "Squash should recover to scale 1")
 
 
-func test_muzzle_flash(ctx: TestContext) -> void:
-	var gigi: Sister = ctx.load_room().get_node("Gigi")
-	var flash: Node2D = gigi.get_node("SquashPivot/Visual/MuzzleFlash")
-	await ctx.physics_frames(30)
-	ctx.check(not flash.visible, "Muzzle flash should be hidden at rest")
-	await ctx.tap_key(KEY_J)
-	ctx.check(flash.visible, "Muzzle flash should show when firing")
-	await ctx.physics_frames(6)
-	ctx.check(not flash.visible, "Muzzle flash should hide quickly")
 
 
 func test_impact_sparks_and_shake(ctx: TestContext) -> void:
 	var room: Node = ctx.load_room()
 	var camera: ShakeCamera = room.get_node("Camera2D")
 	await ctx.physics_frames(30)
-	await ctx.tap_key(KEY_J)
+	# The arm-cannon shot is kept for a future ranged ability; fire one directly
+	# at the crates on the right.
+	var shot: Projectile = load("res://scenes/projectiles/buster_shot.tscn").instantiate()
+	room.add_child(shot)
+	shot.global_position = Vector2(300, 224)
 	var saw_spark: bool = false
 	var max_offset: float = 0.0
 	for i in 90:
@@ -64,3 +59,17 @@ func test_shake_uses_whole_pixels(ctx: TestContext) -> void:
 
 func _has_sparks(node: Node) -> bool:
 	return node.get_children().any(func(child: Node) -> bool: return child is CPUParticles2D)
+
+
+func test_sparks_start_where_they_are_placed(ctx: TestContext) -> void:
+	# Spawners add a spark and then set its position. A one-shot burst that
+	# starts emitting on entering the tree is released at the origin instead,
+	# off-screen, so the spark must wait until the end of the frame.
+	var room: Node = ctx.load_room()
+	await ctx.physics_frames(2)
+	var spark: CPUParticles2D = load("res://scenes/vfx/impact_spark.tscn").instantiate()
+	room.add_child(spark)
+	ctx.check(not spark.emitting, "The spark should not emit before it is positioned")
+	spark.global_position = Vector2(240, 120)
+	await ctx.physics_frames(1)
+	ctx.check(is_instance_valid(spark) and spark.emitting, "The spark should start emitting once positioned")

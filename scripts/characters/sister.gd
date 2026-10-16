@@ -1,23 +1,37 @@
 class_name Sister
 extends CharacterBody2D
-## A playable sister: run, jump, and shoot.
+## A playable sister: run, jump, and fight with her weapon (sword or shuriken).
 ##
-## Shared by Gigi, Evie, and Lucy. Each sister's signature ability will be a
-## separate child component, not a subclass. Game-feel effects listen to
+## Shared by Gigi, Evie, and Lucy. Each sister's signature ability is a
+## SisterAbility child component (e.g. Gigi's dash), not a subclass. Game-feel effects listen to
 ## this node's signals instead of living in this script.
 
 signal jumped
 ## fall_speed is the downward speed just before touching the ground.
 signal landed(fall_speed: float)
-signal shot_fired
+## Emitted when a ground sword slash starts.
+signal attacked
+## Emitted when an overhead slash starts in the air.
+signal air_attacked
+## Emitted when a shuriken is thrown.
+signal threw
 ## Emitted when this sister takes over from another during a swap.
 signal swapped_in
 
-const BUSTER_SHOT_SCENE: PackedScene = preload("res://scenes/projectiles/buster_shot.tscn")
+enum Weapon { SWORD, SHURIKEN }
+enum AttackKind { GROUND, AIR, THROW }
 
-## Identifies this sister: drives her sprite palette and swap beam, and
-## becomes her emissive color once real art exists.
+## Identifies this sister: her outfit, sword slash, and swap beam use it.
 @export var signature_color: Color = Color.CYAN
+## Lightest hair shade; darker shades are derived from it. The boots share
+## the hair colors in the base sprite.
+@export var hair_color: Color = Color(1.0, 0.663, 0.224)
+## Optional art drawn over the shared sprite to give this sister her own look
+## (e.g. Evie's bangs). Must mirror the base sprite's animations and frames.
+@export var hairstyle_frames: SpriteFrames
+## Sword: ground slash and overhead air slash. Shuriken: thrown stars, on the
+## ground or in the air.
+@export var weapon: Weapon = Weapon.SWORD
 
 @export_group("Run")
 @export var run_speed: float = 140.0
@@ -36,10 +50,23 @@ const BUSTER_SHOT_SCENE: PackedScene = preload("res://scenes/projectiles/buster_
 ## A jump pressed this long before landing still fires on landing.
 @export var jump_buffer_time: float = 0.1
 
-@export_group("Shoot")
-## Mega Man style limit on shots alive at once.
-@export var max_shots: int = 3
-@export var muzzle_offset: Vector2 = Vector2(15.0, -5.0)
+@export_group("Attack")
+## Length of a slash; matches the 8-frame attack animation at 12 fps.
+@export var attack_duration: float = 0.66
+## Seconds into the slash when the sword starts and stops hitting (the
+## frames where the blade sweeps forward).
+@export var attack_active_start: float = 0.3
+@export var attack_active_end: float = 0.55
+
+@export_group("Air attack")
+## Overhead slash used when attacking in the air. Landing cuts it short.
+@export var air_attack_duration: float = 0.32
+@export var air_attack_active_start: float = 0.08
+@export var air_attack_active_end: float = 0.24
+
+@export_group("Throw")
+## How long the throwing pose holds before she can throw again.
+@export var throw_duration: float = 0.2
 
 ## The player controlling this sister. Null means no one (she stands still).
 var input: PlayerInput = null
@@ -49,27 +76,49 @@ var facing: int = 1
 var _coyote_timer: float = 0.0
 var _jump_buffer_timer: float = 0.0
 var _is_rising_from_jump: bool = false
-var _live_shots: int = 0
+## Which slash is playing; only meaningful while is_attacking().
+var attack_kind: AttackKind = AttackKind.GROUND
+
+## Seconds since the current slash started, or -1 when not attacking.
+var _attack_time: float = -1.0
+## This sister's signature ability, if she has one (a SisterAbility child).
+var _ability: SisterAbility = null
 
 @onready var _visual: Node2D = $SquashPivot/Visual
 @onready var _sprite: AnimatedSprite2D = $SquashPivot/Visual/Sprite
 @onready var _collision: CollisionShape2D = $CollisionShape2D
 @onready var _swap_beam: SwapBeam = $SquashPivot/Visual/SwapBeam
+@onready var _sword_hitbox: Area2D = $SquashPivot/Visual/SwordHitbox
+@onready var _air_slash_hitbox: Area2D = $SquashPivot/Visual/AirSlashHitbox
+@onready var _slash_arc: SlashArc = $SquashPivot/Visual/SlashArc
+@onready var _hairstyle: SpriteOverlay = $SquashPivot/Visual/Hairstyle
+@onready var _thrower: ShurikenThrower = $SquashPivot/Visual/ShurikenThrower
 
 
 func _ready() -> void:
 	_apply_palette()
 	_swap_beam.set_color(signature_color)
+	_slash_arc.set_color(signature_color)
+	_hairstyle.sprite_frames = hairstyle_frames
+	_hairstyle.visible = hairstyle_frames != null
+	_hairstyle.sync()
+	for child in get_children():
+		if child is SisterAbility:
+			_ability = child
 
 
 func _physics_process(delta: float) -> void:
 	_update_timers(delta)
-	_apply_gravity(delta)
+	var ability_moving: bool = _ability != null and _ability.process_movement(delta)
+	if not ability_moving:
+		_apply_gravity(delta)
+	_update_attack(delta)
 	if input:
-		_handle_run()
-		_handle_jump()
-		_handle_shoot()
-	else:
+		if not ability_moving:
+			_handle_run()
+			_handle_jump()
+		_handle_attack()
+	elif not ability_moving:
 		velocity.x = 0.0
 	var was_on_floor: bool = is_on_floor()
 	var fall_speed: float = velocity.y
@@ -85,6 +134,33 @@ func set_active(active: bool) -> void:
 	_collision.disabled = not active
 	if not active:
 		input = null
+		_end_attack()
+		if _ability:
+			_ability.cancel()
+
+
+func is_attacking() -> bool:
+	return _attack_time >= 0.0
+
+
+func get_sprite() -> AnimatedSprite2D:
+	return _sprite
+
+
+## Animation the ability wants shown instead of movement (e.g. the dash pose),
+## or empty.
+func get_ability_animation() -> StringName:
+	return _ability.get_animation_override() if _ability else &""
+
+
+## Jumps straight up. height_scale 1.0 is a full jump; holding jump still
+## controls the height.
+func perform_jump(height_scale: float) -> void:
+	velocity.y = -_get_jump_velocity() * sqrt(height_scale)
+	_jump_buffer_timer = 0.0
+	_coyote_timer = 0.0
+	_is_rising_from_jump = true
+	jumped.emit()
 
 
 ## Steps in where `other` stands, keeping her motion so swaps work mid-jump.
@@ -101,9 +177,12 @@ func _apply_palette() -> void:
 	var palette := _sprite.material as ShaderMaterial
 	if palette == null:
 		return
-	palette.set_shader_parameter(&"target_main", signature_color)
-	palette.set_shader_parameter(&"target_shade", signature_color.darkened(0.45))
-	palette.set_shader_parameter(&"target_accent", signature_color.lightened(0.6))
+	palette.set_shader_parameter(&"target_outfit", signature_color)
+	palette.set_shader_parameter(&"target_outfit_shade", signature_color.darkened(0.5))
+	palette.set_shader_parameter(&"target_hair", hair_color)
+	palette.set_shader_parameter(&"target_hair_mid", hair_color.darkened(0.3))
+	palette.set_shader_parameter(&"target_hair_dark", hair_color.darkened(0.55))
+	palette.set_shader_parameter(&"target_slash", signature_color.lightened(0.45))
 
 
 func _set_facing(direction: int) -> void:
@@ -151,28 +230,62 @@ func _handle_jump() -> void:
 	if input.is_jump_just_pressed():
 		_jump_buffer_timer = jump_buffer_time
 	if _jump_buffer_timer > 0.0 and _coyote_timer > 0.0:
-		velocity.y = -_get_jump_velocity()
-		_jump_buffer_timer = 0.0
-		_coyote_timer = 0.0
-		_is_rising_from_jump = true
-		jumped.emit()
+		perform_jump(1.0)
+	elif input.is_jump_just_pressed() and _ability and _ability.try_air_jump():
+		pass
 	elif _is_rising_from_jump and not input.is_jump_held():
 		velocity.y *= jump_cut_multiplier
 		_is_rising_from_jump = false
 
 
-func _handle_shoot() -> void:
-	if not input.is_shoot_just_pressed() or _live_shots >= max_shots:
+func _handle_attack() -> void:
+	if not input.is_attack_just_pressed() or is_attacking():
 		return
-	var shot: BusterShot = BUSTER_SHOT_SCENE.instantiate()
-	shot.direction = facing
-	# Added to the room, not to us, so it keeps flying if we are swapped out.
-	get_parent().add_child(shot)
-	shot.global_position = global_position + Vector2(muzzle_offset.x * facing, muzzle_offset.y)
-	_live_shots += 1
-	shot.tree_exited.connect(_on_shot_tree_exited)
-	shot_fired.emit()
+	if weapon == Weapon.SHURIKEN:
+		if not _thrower.can_throw():
+			return
+		_attack_time = 0.0
+		attack_kind = AttackKind.THROW
+		_thrower.throw(facing)
+		threw.emit()
+		return
+	_attack_time = 0.0
+	if is_on_floor():
+		attack_kind = AttackKind.GROUND
+		attacked.emit()
+	else:
+		attack_kind = AttackKind.AIR
+		air_attacked.emit()
 
 
-func _on_shot_tree_exited() -> void:
-	_live_shots -= 1
+func _update_attack(delta: float) -> void:
+	if not is_attacking():
+		return
+	if attack_kind == AttackKind.AIR and is_on_floor():
+		_end_attack()
+		return
+	_attack_time += delta
+	match attack_kind:
+		AttackKind.GROUND:
+			_update_slash(attack_duration, attack_active_start, attack_active_end, _sword_hitbox)
+		AttackKind.AIR:
+			_update_slash(air_attack_duration, air_attack_active_start, air_attack_active_end, _air_slash_hitbox)
+		AttackKind.THROW:
+			if _attack_time >= throw_duration:
+				_end_attack()
+
+
+## Ends the slash after `duration`; the hitbox is live between the two times.
+func _update_slash(duration: float, active_start: float, active_end: float, hitbox: Area2D) -> void:
+	if _attack_time >= duration:
+		_end_attack()
+		return
+	hitbox.monitoring = _attack_time >= active_start and _attack_time < active_end
+
+
+func _end_attack() -> void:
+	if attack_kind == AttackKind.AIR and is_attacking():
+		_slash_arc.stop()
+	_attack_time = -1.0
+	_sword_hitbox.monitoring = false
+	_air_slash_hitbox.monitoring = false

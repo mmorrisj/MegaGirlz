@@ -1,8 +1,8 @@
 extends RefCounted
-## The sister's animation follows her movement and shooting.
+## The sister's animation follows her movement and sword slashes.
 
 
-func test_idle_run_and_jump(ctx: TestContext) -> void:
+func test_idle_run_jump_and_fall(ctx: TestContext) -> void:
 	var gigi: Sister = ctx.load_room().get_node("Gigi")
 	var sprite: AnimatedSprite2D = gigi.get_node("SquashPivot/Visual/Sprite")
 	await ctx.physics_frames(30)
@@ -14,21 +14,20 @@ func test_idle_run_and_jump(ctx: TestContext) -> void:
 	await ctx.physics_frames(2)
 	ctx.press_key(KEY_SPACE)
 	await ctx.physics_frames(5)
-	ctx.check(sprite.animation == &"jump", "Airborne should show jump, got %s" % sprite.animation)
+	ctx.check(sprite.animation == &"jump", "Rising should show jump, got %s" % sprite.animation)
+	await ctx.physics_frames(25)
+	ctx.check(sprite.animation == &"fall", "Falling should show fall, got %s" % sprite.animation)
 
 
-func test_shoot_pose_standing_and_running(ctx: TestContext) -> void:
+func test_slash_plays_to_the_end(ctx: TestContext) -> void:
 	var gigi: Sister = ctx.load_room().get_node("Gigi")
 	var sprite: AnimatedSprite2D = gigi.get_node("SquashPivot/Visual/Sprite")
 	await ctx.physics_frames(30)
 	await ctx.tap_key(KEY_J)
-	ctx.check(sprite.animation == &"shoot", "Firing while standing should show shoot, got %s" % sprite.animation)
-	await ctx.physics_frames(25)
-	ctx.check(sprite.animation == &"idle", "Shoot pose should end after ~0.25 s, got %s" % sprite.animation)
+	ctx.check(sprite.animation == &"attack", "Attacking should play the slash, got %s" % sprite.animation)
 	ctx.press_key(KEY_D)
-	await ctx.physics_frames(8)
-	var stride_frame: int = sprite.frame
-	await ctx.tap_key(KEY_J)
-	ctx.check(sprite.animation == &"run_shoot", "Firing while running should show run_shoot, got %s" % sprite.animation)
-	ctx.check(sprite.frame == stride_frame or sprite.frame == (stride_frame + 1) % 4,
-		"Run and run_shoot should share the stride (was %d, now %d)" % [stride_frame, sprite.frame])
+	await ctx.physics_frames(10)
+	ctx.check(sprite.animation == &"attack", "Running mid-slash should not cut the slash short")
+	ctx.release_key(KEY_D)
+	await ctx.physics_frames(40)
+	ctx.check(sprite.animation == &"idle", "After the slash she should idle again, got %s" % sprite.animation)

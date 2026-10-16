@@ -4,4 +4,7 @@ extends CPUParticles2D
 
 func _ready() -> void:
 	finished.connect(queue_free)
-	emitting = true
+	# Start at the end of the frame: spawners set the position right after
+	# adding the node, and a burst started now would all be emitted at the
+	# origin, off-screen.
+	set_deferred("emitting", true)

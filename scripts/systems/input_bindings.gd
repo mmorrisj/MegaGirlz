@@ -8,10 +8,12 @@ class_name InputBindings
 const MOVE_LEFT: StringName = &"move_left"
 const MOVE_RIGHT: StringName = &"move_right"
 const JUMP: StringName = &"jump"
-const SHOOT: StringName = &"shoot"
+const ATTACK: StringName = &"attack"
 const SWAP_NEXT: StringName = &"swap_next"
 const SWAP_PREV: StringName = &"swap_prev"
-const ACTIONS: Array[StringName] = [MOVE_LEFT, MOVE_RIGHT, JUMP, SHOOT, SWAP_NEXT, SWAP_PREV]
+## The active sister's signature ability (e.g. Gigi's dash).
+const ABILITY: StringName = &"ability"
+const ACTIONS: Array[StringName] = [MOVE_LEFT, MOVE_RIGHT, JUMP, ATTACK, SWAP_NEXT, SWAP_PREV, ABILITY]
 
 ## Same value as InputMap's internal ALL_DEVICES: the event matches any device.
 const ALL_DEVICES: int = -1
@@ -32,12 +34,14 @@ static func bind_keyboard(player_index: int) -> void:
 	_add_key(player_index, JUMP, KEY_SPACE)
 	_add_key(player_index, JUMP, KEY_K)
 	_add_key(player_index, JUMP, KEY_Z)
-	_add_key(player_index, SHOOT, KEY_J)
-	_add_key(player_index, SHOOT, KEY_X)
+	_add_key(player_index, ATTACK, KEY_J)
+	_add_key(player_index, ATTACK, KEY_X)
 	_add_key(player_index, SWAP_NEXT, KEY_E)
 	_add_key(player_index, SWAP_NEXT, KEY_O)
 	_add_key(player_index, SWAP_PREV, KEY_Q)
 	_add_key(player_index, SWAP_PREV, KEY_U)
+	_add_key(player_index, ABILITY, KEY_SHIFT)
+	_add_key(player_index, ABILITY, KEY_L)
 
 
 ## Binds a player slot to one joypad, replacing any previous bindings.
@@ -48,9 +52,10 @@ static func bind_joypad(player_index: int, device: int) -> void:
 	_add_joy_button(player_index, MOVE_LEFT, device, JOY_BUTTON_DPAD_LEFT)
 	_add_joy_button(player_index, MOVE_RIGHT, device, JOY_BUTTON_DPAD_RIGHT)
 	_add_joy_button(player_index, JUMP, device, JOY_BUTTON_A)
-	_add_joy_button(player_index, SHOOT, device, JOY_BUTTON_X)
+	_add_joy_button(player_index, ATTACK, device, JOY_BUTTON_X)
 	_add_joy_button(player_index, SWAP_NEXT, device, JOY_BUTTON_RIGHT_SHOULDER)
 	_add_joy_button(player_index, SWAP_PREV, device, JOY_BUTTON_LEFT_SHOULDER)
+	_add_joy_button(player_index, ABILITY, device, JOY_BUTTON_B)
 
 
 ## Removes a player slot's actions entirely (e.g. on drop-out).

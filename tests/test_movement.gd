@@ -1,5 +1,5 @@
 extends RefCounted
-## Run, jump, and shoot for one keyboard-controlled sister.
+## Run, jump, and sword slash for one keyboard-controlled sister.
 
 
 func test_lands_on_floor(ctx: TestContext) -> void:
@@ -29,16 +29,24 @@ func test_jump_height_depends_on_hold(ctx: TestContext) -> void:
 	ctx.check(tapped < full * 0.6, "Tapped jump should be much lower, got %.1f" % tapped)
 
 
-func test_shot_limit_and_wall_hits(ctx: TestContext) -> void:
+func test_sword_slash_hits_only_mid_swing(ctx: TestContext) -> void:
 	var gigi: Sister = _spawn_gigi(ctx)
+	var hitbox: Area2D = gigi.get_node("SquashPivot/Visual/SwordHitbox")
 	await ctx.physics_frames(30)
-	for i in 5:
-		await ctx.tap_key(KEY_J)
-		await ctx.physics_frames(2)
-	ctx.check(gigi._live_shots == 3, "Only 3 shots may be alive, got %d" % gigi._live_shots)
-	# Well under the 2 s lifetime: shots must be removed by hitting the room.
-	await ctx.physics_frames(90)
-	ctx.check(gigi._live_shots == 0, "Shots should be gone after hitting walls")
+	ctx.check(not hitbox.monitoring, "The sword should be harmless at rest")
+	await ctx.tap_key(KEY_J)
+	ctx.check(gigi.is_attacking(), "J should start a slash")
+	ctx.check(not hitbox.monitoring, "The wind-up should not hit yet")
+	await ctx.physics_frames(8)
+	var slash_time: float = gigi._attack_time
+	await ctx.tap_key(KEY_J)
+	ctx.check(gigi._attack_time > slash_time, "Pressing attack mid-slash should not restart it")
+	var was_live: bool = false
+	for i in 50:
+		await ctx.physics_frames(1)
+		was_live = was_live or hitbox.monitoring
+	ctx.check(was_live, "The sword should hit during the swing")
+	ctx.check(not gigi.is_attacking() and not hitbox.monitoring, "The slash should end and the sword go harmless")
 
 
 func test_unassigned_sister_ignores_input(ctx: TestContext) -> void:

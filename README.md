@@ -8,20 +8,20 @@ The sisters fight through a series of stages to recover something lost (story TB
 
 | Sister | Ability | Signature color (placeholder) |
 |---|---|---|
-| Gigi | TBD | Cyan |
-| Evie | TBD | Magenta |
-| Lucy | TBD | Amber |
+| Gigi | Sword; dash (ability button) | Cyan |
+| Evie | Shuriken (ranged); ability TBD | Magenta |
+| Lucy | Sword; double jump | Amber |
 
-Abilities are not designed yet. They will be tuned to fit each sister's personality. Each sister has her own palette and an emissive element (core, visor, or arm cannon) in her signature color, so the player always knows who is on stage. The placeholder art shows this with a Mega Man style palette swap.
+Abilities are not designed yet. They will be tuned to fit each sister's personality. Each sister has her own palette and an emissive element (core, visor, or arm cannon) in her signature color, so the player always knows who is on stage. The prototype uses one base sprite (the Magic Cliffs heroine) recolored per sister: outfit and sword slash in her signature color, plus her own hair color. Distinct hairstyles per sister are a planned art pass.
 
 ## Core design decisions
 
-- **Side-scrolling action platformer.** Run, jump, shoot, slide, and climb ladders, Mega Man style.
+- **Side-scrolling action platformer.** Run, jump, and fight with a sword, closer to *Mega Man Zero* than classic Mega Man. Each sister's unique ability adds her ranged or movement option.
 - **Single player with instant sister swapping.** Swapping is the core mechanic: the next sister appears in place, keeping position and momentum (even mid-jump), with a short teleport-beam flash.
 - **Local co-op deferred, not ruled out.** Input already goes through a per-player layer and characters are decoupled from who controls them, so 2–3 player co-op on one shared screen can be added later without a rewrite. No online multiplayer and no split-screen.
-- **Fixed-screen / locked-scroll camera.** Stages are built from screen-sized rooms and scroll-locked sections, like Mega Man. No zooming (it makes pixel art shimmer).
+- **Fixed-screen and horizontal scrolling sections.** Stages mix screen-sized rooms with scrolling sections, like Mega Man. Scrolling sections show off layered parallax backgrounds (`Parallax2D`). The camera scrolls in whole pixels and never zooms (zooming makes pixel art shimmer).
 - **Modern pixel art.** Detailed sprites combined with modern effects: HDR glow, dynamic 2D lights, particles, and parallax backgrounds (think *Dead Cells*, *Katana Zero*). Prototype with free/CC0 packs; final heroes likely commissioned.
-- **Game feel is a priority.** Hit-stop, screen shake, hit flash, squash and stretch, muzzle flashes, and particle effects are core features, not polish.
+- **Game feel is a priority.** Hit-stop, screen shake, hit flash, squash and stretch, slash effects, and particle effects are core features, not polish.
 - **Family-friendly difficulty.** Assume younger players, with forgiving fail states. Tune once playtesting starts.
 
 ## Art direction
@@ -48,7 +48,7 @@ Abilities are not designed yet. They will be tuned to fit each sister's personal
 2. Game feel pass on the basics: screen shake, muzzle flash, shot impact sparks, jump and land squash and stretch.
 3. Sister swapping: three sisters, instant swap with a beam flash, per-sister palettes.
 4. Controller support for the single player (auto-detect the first connected controller).
-5. Fixed-screen camera with room transitions.
+5. Camera: horizontal scrolling sections (done in the Magic Cliffs stage) and fixed-screen rooms with transitions.
 6. Visual pass: HDR glow, one dynamic light, parallax background.
 7. One enemy type (with hit flash and hit-stop) and each sister's signature ability.
 
@@ -103,9 +103,9 @@ CREDITS.md
 
 1. Install Godot 4.7 or newer (stable, standard build, not .NET).
 2. Clone the repo and open `project.godot` in Godot.
-3. Press F5 to run. The entry scene is `scenes/levels/test_room.tscn`.
+3. Press F5 to run. The entry scene is `scenes/levels/magic_cliffs.tscn`, a horizontal scrolling stage with parallax layers. `scenes/levels/test_room.tscn` is a single-screen room for testing mechanics (open it and press F6).
 
-Prototype controls (keyboard): move **A/D** or **arrows**, jump **Space/K/Z** (hold for a higher jump), shoot **J/X**, swap sister **E/O** (next) and **Q/U** (previous). Controller bindings: A jump, X shoot, RB/LB swap.
+Prototype controls (keyboard): move **A/D** or **arrows**, jump **Space/K/Z** (hold for a higher jump), attack **J/X** (Gigi and Lucy: sword slash, overhead slash in the air; Evie: throws shuriken, up to 3 in flight), ability **Shift/L** (Gigi: dash, once per jump in the air; Lucy's double jump is a second jump press in mid-air), swap sister **E/O** (next) and **Q/U** (previous). Controller bindings: A jump, X attack, B ability, RB/LB swap.
 
 Movement feel is tuned through `@export` values on the `Sister` node (Inspector panel): run speed, jump height, time to apex, coyote time, jump buffer, max shots.
 

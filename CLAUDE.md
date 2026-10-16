@@ -35,7 +35,8 @@ The game is single player for now, but keep the input layer co-op ready so local
 
 ## Camera
 
-- Single shared `Camera2D`, Mega Man style: fixed-screen rooms and scroll-locked sections. No free zoom (non-integer zoom makes pixel art shimmer). No split-screen.
+- Single `Camera2D`, Mega Man style: fixed-screen rooms and horizontal scrolling sections (`CameraFollow` keeps the active sister centered, in whole pixels, within the camera limits). No free zoom (non-integer zoom makes pixel art shimmer). No split-screen.
+- Backgrounds are layered `Parallax2D` nodes; farther layers get a smaller `scroll_scale`.
 - If co-op is added, players who fall behind are handled by a catch-up rule (teleport or bubble respawn), not by zooming out.
 
 ## Visuals and game feel
